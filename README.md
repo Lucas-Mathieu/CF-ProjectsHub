@@ -10,7 +10,7 @@ Le backlog complet du projet est disponible sur Trello :
 
 ## 📁 Structure du dépôt
 
-/www → Code source du site (HTML, CSS, JS, PHP) 
+/www → Code source du site (HTML, CSS, JS, PHP) <br />
 /doc → Documentation technique <br />
 ├── backlog.txt → Lien vers le backlog trello <br />
 ├── bdd_dump.sql → Structure actuelle de la base de données <br />
