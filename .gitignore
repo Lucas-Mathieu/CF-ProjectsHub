@@ -18,7 +18,8 @@
 # Mono auto generated files
 mono_crash.*
 
-# Build results
+# User uploaded files
+# Build resultswww/uploads/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
