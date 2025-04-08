@@ -1,13 +1,14 @@
 <?php
 
+require_once __DIR__ . '/../../core/Database.php';
+
 class UserModel
 {
     private $db;
 
     public function __construct()
     {
-        // Update with your real DB credentials
-        $this->db = new PDO('mysql:host=localhost;dbname=projecthub;charset=utf8', 'root', '');
+        $this->db = database::getConnection();
     }
 
     // Get user by email
@@ -31,6 +32,20 @@ class UserModel
         $stmt = $this->db->prepare('SELECT * FROM user WHERE id = ?');
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Update user profile
+    public function updateUserProfile($id, $name, $email)
+    {
+        $stmt = $this->db->prepare('UPDATE user SET name = ?, email = ? WHERE id = ?');
+        $stmt->execute([$name, $email, $id]);
+    }
+
+    // Change user password
+    public function changeUserPassword($id, $newPassword)
+    {
+        $stmt = $this->db->prepare('UPDATE user SET password = ? WHERE id = ?');
+        $stmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $id]);
     }
 }
 ?>

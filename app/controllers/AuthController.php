@@ -12,13 +12,13 @@ class AuthController
     // Show login form
     public function showLoginForm()
     {
-        require '../app/views/auth/login.php';
+        require '../app/views/auth/Login.php';
     }
 
     // Show register form
     public function showRegisterForm()
     {
-        require '../app/views/auth/register.php';
+        require '../app/views/auth/Register.php';
     }
 
     // Handle login logic
@@ -28,7 +28,7 @@ class AuthController
         $password = $_POST['password'] ?? '';
 
         if (empty($email) || empty($password)) {
-            $_SESSION['error'] = "Please fill all fields.";
+            $_SESSION['error'] = "Tous les champs doivent être remplis.";
             header('Location: /login');
             exit;
         }
@@ -46,7 +46,7 @@ class AuthController
             header('Location: /account');
             exit;
         } else {
-            $_SESSION['error'] = "Invalid credentials.";
+            $_SESSION['error'] = "Email ou mot de passe invalide.";
             header('Location: /login');
             exit;
         }
@@ -60,13 +60,13 @@ class AuthController
         $password = $_POST['password'] ?? '';
 
         if (empty($name) || empty($email) || empty($password)) {
-            $_SESSION['error'] = "Please fill all fields.";
+            $_SESSION['error'] = "Tous les champs doivent être remplis.";
             header('Location: /register');
             exit;
         }
 
         if ($this->userModel->getUserByEmail($email)) {
-            $_SESSION['error'] = "Email already registered.";
+            $_SESSION['error'] = "Email déjà utilisée.";
             header('Location: /register');
             exit;
         }
@@ -89,7 +89,7 @@ class AuthController
             header('Location: /account');
             exit;
         } else {
-            $_SESSION['error'] = "An error occured.";
+            $_SESSION['error'] = "Une erreure est survenue.";
             header('Location: /register');
             exit;
         }

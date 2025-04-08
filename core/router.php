@@ -5,7 +5,8 @@ session_start();
 // Load dependencies
 require_once '../app/controllers/AuthController.php';
 #require_once '../app/controllers/PostController.php';
-#require_once '../app/controllers/UserController.php';
+require_once '../app/controllers/UserController.php';
+
 #require_once '../app/models/PostModel.php';
 require_once '../app/models/UserModel.php';
 #require_once '../app/models/CommentModel.php';
@@ -17,7 +18,7 @@ $userModel = new UserModel();
 
 $authController = new AuthController($userModel);
 #$postController = new PostController($postModel, $commentModel);
-#$userController = new UserController($userModel);
+$userController = new UserController($userModel);
 
 // Get the URI and HTTP method
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -45,9 +46,11 @@ switch (true) {
             : $authController->showRegisterForm();
         break;
 
-    // User account page (only GET, updates via AJAX)
+    // Show account page (GET) and handle profile update (POST)
     case $uri === '/account':
-        $userController->showAccountPage();
+        $method === 'POST' 
+            ? $userController->updateProfile()
+            : $userController->showAccountPage();
         break;
 
     // Admin dashboard (GET only)
