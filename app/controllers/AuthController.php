@@ -103,5 +103,22 @@ class AuthController
         header('Location: /');
         exit;
     }
+
+    // Delete user account
+    public function deleteAccount()
+    {
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour supprimer votre compte.";
+            header('Location: /login');
+            exit;
+        }
+
+        $userId = $_SESSION['user']['id'];
+        $this->userModel->deleteUser($userId);
+
+        session_destroy();
+        header('Location: /');
+        exit;
+    }
 }
 ?>

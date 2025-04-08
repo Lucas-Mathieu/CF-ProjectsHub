@@ -47,5 +47,12 @@ class UserModel
         $stmt = $this->db->prepare('UPDATE user SET password = ? WHERE id = ?');
         $stmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $id]);
     }
+
+    // Delete user account
+    public function deleteUser($id)
+    {
+        $stmt = $this->db->prepare('DELETE FROM user WHERE id = ?');
+        $stmt->execute([$id]);
+    }
 }
 ?>

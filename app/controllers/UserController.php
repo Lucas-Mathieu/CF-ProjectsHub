@@ -26,7 +26,7 @@ class UserController
         $user = $this->userModel->getUserById($userId);
 
         // Afficher la page de compte avec les informations de l'utilisateur
-        require_once '../app/views/account.php';
+        require_once '../app/views/auth/account.php';
     }
 
     // Handle the update of the user profile

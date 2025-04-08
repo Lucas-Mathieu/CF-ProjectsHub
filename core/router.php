@@ -74,6 +74,11 @@ switch (true) {
         $authController->logout();
         break;
 
+    // Delete account
+    case $uri === '/delete-account':
+        $authController->deleteAccount();
+        break;
+
     // Fallback 404
     default:
         http_response_code(404);
