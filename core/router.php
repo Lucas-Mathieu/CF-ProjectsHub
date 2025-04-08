@@ -3,21 +3,21 @@
 session_start();
 
 // Load dependencies
-require_once 'controllers/AuthController.php';
-require_once 'controllers/PostController.php';
-require_once 'controllers/UserController.php';
-require_once 'models/PostModel.php';
-require_once 'models/UserModel.php';
-require_once 'models/CommentModel.php';
+require_once '../app/controllers/AuthController.php';
+#require_once '../app/controllers/PostController.php';
+#require_once '../app/controllers/UserController.php';
+#require_once '../app/models/PostModel.php';
+require_once '../app/models/UserModel.php';
+#require_once '../app/models/CommentModel.php';
 
 // Instantiate models and controllers
-$postModel = new PostModel();
+#$postModel = new PostModel();
 $userModel = new UserModel();
-$commentModel = new CommentModel();
+#$commentModel = new CommentModel();
 
 $authController = new AuthController($userModel);
-$postController = new PostController($postModel, $commentModel);
-$userController = new UserController($userModel);
+#$postController = new PostController($postModel, $commentModel);
+#$userController = new UserController($userModel);
 
 // Get the URI and HTTP method
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
