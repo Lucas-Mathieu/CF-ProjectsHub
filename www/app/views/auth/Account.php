@@ -13,6 +13,15 @@
             <input type="submit" value="Update Profile" class="btn btn-primary">
         </form>
 
+        <div class="pfp">
+            <img src="<?= htmlspecialchars($pfpPath)?>" alt="Image de profil" class="profile-image">
+        </div>
+
+        <form action="/upload-pfp" method="POST" enctype="multipart/form-data" class="upload-pfp-form">
+            <input type="file" name="avatar" accept="image/*" required class="form-input">
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
         <div class="account-actions">
             <a href="/logout" class="btn btn-red">Logout</a>
             <a href="/delete-account" class="btn btn-red">Delete Account</a>

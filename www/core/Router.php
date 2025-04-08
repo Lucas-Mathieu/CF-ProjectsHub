@@ -69,6 +69,11 @@ switch (true) {
         $postController->showPostDetail($postId);
         break;
 
+    // Upload profile picture
+    case $uri === '/upload-pfp' && $method === 'POST':
+        $userController->uploadProfilePicture();
+        break;
+
     // Logout
     case $uri === '/logout':
         $authController->logout();
