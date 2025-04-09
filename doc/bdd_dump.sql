@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2025 at 02:39 PM
+-- Generation Time: Apr 09, 2025 at 06:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,6 +41,7 @@ CREATE TABLE `post` (
 -- Dumping data for table `post`
 --
 
+
 -- --------------------------------------------------------
 
 --
@@ -51,9 +52,7 @@ CREATE TABLE `post_comment` (
   `id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `id_post` int(11) NOT NULL,
-  `parent_id` int(11) DEFAULT NULL,
   `text` text NOT NULL,
-  `like_count` int(11) NOT NULL DEFAULT 0,
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -76,6 +75,24 @@ CREATE TABLE `post_like` (
 
 --
 -- Dumping data for table `post_like`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `post_replies`
+--
+
+CREATE TABLE `post_replies` (
+  `id` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_parent` int(11) NOT NULL,
+  `text` text NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `post_replies`
 --
 
 -- --------------------------------------------------------
@@ -145,8 +162,7 @@ ALTER TABLE `post`
 ALTER TABLE `post_comment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `comment_FK1` (`id_user`) USING BTREE,
-  ADD KEY `comment_FK2` (`id_post`) USING BTREE,
-  ADD KEY `comment_FK3` (`parent_id`) USING BTREE;
+  ADD KEY `comment_FK2` (`id_post`) USING BTREE;
 
 --
 -- Indexes for table `post_like`
@@ -155,6 +171,14 @@ ALTER TABLE `post_like`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_like` (`id_user`,`id_post`),
   ADD KEY `like_FK2` (`id_post`);
+
+--
+-- Indexes for table `post_replies`
+--
+ALTER TABLE `post_replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `post_replies_FK` (`id_user`),
+  ADD KEY `post_replies_FK2` (`id_parent`);
 
 --
 -- Indexes for table `post_tag`
@@ -186,7 +210,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `post_comment`
@@ -216,7 +240,7 @@ ALTER TABLE `tag`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -233,8 +257,7 @@ ALTER TABLE `post`
 --
 ALTER TABLE `post_comment`
   ADD CONSTRAINT `post_FK1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `post_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`),
-  ADD CONSTRAINT `post_FK3` FOREIGN KEY (`parent_id`) REFERENCES `post_comment` (`id`);
+  ADD CONSTRAINT `post_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
 
 --
 -- Constraints for table `post_like`
@@ -242,6 +265,13 @@ ALTER TABLE `post_comment`
 ALTER TABLE `post_like`
   ADD CONSTRAINT `like_FK1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `like_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
+
+--
+-- Constraints for table `post_replies`
+--
+ALTER TABLE `post_replies`
+  ADD CONSTRAINT `post_replies_FK` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `post_replies_FK2` FOREIGN KEY (`id_parent`) REFERENCES `post_comment` (`id`);
 
 --
 -- Constraints for table `post_tag`

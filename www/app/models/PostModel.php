@@ -1,12 +1,14 @@
 <?php
 
+require_once __DIR__ . '/../../core/Database.php';
+
 class PostModel
 {
     private $db;
 
     public function __construct()
     {
-        $this->db = new PDO("mysql:host=localhost;dbname=projecthub;charset=utf8mb4", "root", "");
+        $this->db = database::getConnection();
     }
 
     public function getAllPosts()
