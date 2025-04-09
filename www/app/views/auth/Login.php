@@ -11,11 +11,11 @@
         <form action="/login" method="POST" class="auth-form">
             <input type="email" name="email" placeholder="Email" required class="form-input">
             <input type="password" name="password" placeholder="Password" required class="form-input">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary">Connexion</button>
         </form>
 
         <p class="auth-alt-link">
-            Don’t have an account? <a href="/register">Register here</a>
+            Voux n'avez pas de compte ? <a href="/register">Créez en un</a>
         </p>
     </main>
 

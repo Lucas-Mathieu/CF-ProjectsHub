@@ -12,11 +12,11 @@
             <input type="text" name="name" placeholder="Name" required class="form-input">
             <input type="email" name="email" placeholder="Email" required class="form-input">
             <input type="password" name="password" placeholder="Password" required class="form-input">
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Créer un compte</button>
         </form>
 
         <p class="auth-alt-link">
-            Already have an account? <a href="/login">Login here</a>
+            Vous avez déjà un compte ? <a href="/login">Connectez vous</a>
         </p>
     </main>
 
