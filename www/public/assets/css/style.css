@@ -53,6 +53,22 @@ nav ul li a:hover {
 }
 
 /* POSTS LIST */
+.create-post-btn {
+    display: inline-block;
+    margin: 1rem 0;
+    padding: 0.6rem 1.2rem;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.create-post-btn:hover {
+    background-color: #0056b3;
+}
+
 .posts-container {
     max-width: 1200px;
     margin: 40px auto;

@@ -123,6 +123,11 @@ class PostController
         require_once '../app/views/posts/post_detail.php';
     }
 
+    public function showCreatePost()
+    {
+        require_once '../app/views/posts/create_post.php';
+    }
+
     public function toggleLike()
     {
         if (!isset($_SESSION['user'])) {
@@ -154,5 +159,41 @@ class PostController
         ]);
         exit;
     }
+
+    public function createPost()
+    {
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour publier.";
+            header('Location: /login');
+            exit;
+        }
+    
+        $userId = $_SESSION['user']['id'];
+        $title = trim($_POST['title'] ?? '');
+        $content = trim($_POST['content'] ?? '');
+    
+        if (empty($title) || empty($content)) {
+            $_SESSION['error'] = "Titre et contenu sont requis.";
+            header('Location: /create-post');
+            exit;
+        }
+    
+        $hasImage = !empty($_FILES['image']['tmp_name']);
+        $postId = $this->postModel->createPost($userId, $title, $content, $hasImage);
+    
+        // Upload image
+        if ($hasImage) {
+            $postDir = "uploads/posts/$postId";
+            if (!file_exists($postDir)) {
+                mkdir($postDir, 0777, true);
+            }
+    
+            $targetPath = "$postDir/post.jpg";
+            move_uploaded_file($_FILES['image']['tmp_name'], $targetPath);
+        }
+    
+        header('Location: /posts');
+        exit;
+    }    
 }
 ?>

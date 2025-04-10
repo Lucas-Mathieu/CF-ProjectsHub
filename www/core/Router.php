@@ -69,6 +69,13 @@ switch (true) {
         $postController->showPostDetail($postId);
         break;
 
+    // Create new post
+    case $uri === '/create-post':
+        $method === 'POST'
+            ? $postController->createPost()
+            : $postController->showCreatePost();
+        break;
+
     // Upload profile picture
     case $uri === '/upload-pfp' && $method === 'POST':
         $userController->uploadProfilePicture();
@@ -129,7 +136,6 @@ switch (true) {
         $html = ob_get_clean();
         echo json_encode(['success' => true, 'html' => $html]);
         exit;
-
 
     // Fallback 404
     default:

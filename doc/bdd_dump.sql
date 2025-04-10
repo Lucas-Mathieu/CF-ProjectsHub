@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2025 at 06:30 PM
+-- Generation Time: Apr 10, 2025 at 08:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,7 +41,6 @@ CREATE TABLE `post` (
 -- Dumping data for table `post`
 --
 
-
 -- --------------------------------------------------------
 
 --
@@ -73,10 +72,6 @@ CREATE TABLE `post_like` (
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `post_like`
---
-
 -- --------------------------------------------------------
 
 --
@@ -86,6 +81,7 @@ CREATE TABLE `post_like` (
 CREATE TABLE `post_replies` (
   `id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
+  `id_post` int(11) NOT NULL,
   `id_parent` int(11) NOT NULL,
   `text` text NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp()
@@ -178,7 +174,8 @@ ALTER TABLE `post_like`
 ALTER TABLE `post_replies`
   ADD PRIMARY KEY (`id`),
   ADD KEY `post_replies_FK` (`id_user`),
-  ADD KEY `post_replies_FK2` (`id_parent`);
+  ADD KEY `post_replies_FK2` (`id_parent`),
+  ADD KEY `post_replies_FK3` (`id_post`);
 
 --
 -- Indexes for table `post_tag`
@@ -216,13 +213,19 @@ ALTER TABLE `post`
 -- AUTO_INCREMENT for table `post_comment`
 --
 ALTER TABLE `post_comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `post_like`
 --
 ALTER TABLE `post_like`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `post_replies`
+--
+ALTER TABLE `post_replies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `post_tag`
@@ -271,7 +274,8 @@ ALTER TABLE `post_like`
 --
 ALTER TABLE `post_replies`
   ADD CONSTRAINT `post_replies_FK` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `post_replies_FK2` FOREIGN KEY (`id_parent`) REFERENCES `post_comment` (`id`);
+  ADD CONSTRAINT `post_replies_FK2` FOREIGN KEY (`id_parent`) REFERENCES `post_comment` (`id`),
+  ADD CONSTRAINT `post_replies_FK3` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
 
 --
 -- Constraints for table `post_tag`

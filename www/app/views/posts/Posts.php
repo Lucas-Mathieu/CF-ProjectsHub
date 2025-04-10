@@ -1,7 +1,11 @@
     <?php require_once '../app/views/partials/header.php'; ?>
 
     <main class="posts-container">
-        <h1 class="posts-title">All Posts</h1>
+    <?php if (isset($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
+        <a href="/create-post" class="create-post-btn">Créer un post</a>
+    <?php else : ?>
+        <h1 class="posts-title">Tous les posts</h1>
+    <?php endif; ?>
 
         <?php if (!empty($posts)) : ?>
             <div class="posts-grid">

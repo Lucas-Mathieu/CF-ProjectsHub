@@ -75,5 +75,20 @@ class PostModel
 
         $this->db->commit();
     }
+
+    public function createPost($userId, $title, $content, $hasImage = false)
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO post (id_user, title, text, date_created, date_modified, like_count)
+            VALUES (:id_user, :title, :text, NOW(), NOW(), 0)
+        ");
+        $stmt->execute([
+            'id_user' => $userId,
+            'title' => $title,
+            'text' => $content
+        ]);
+    
+        return $this->db->lastInsertId();
+    }
 }
 ?>
