@@ -36,6 +36,11 @@ class AuthController
         $user = $this->userModel->getUserByEmail($email);
 
         if ($user && password_verify($password, $user['password'])) {
+            $pfpPath = "uploads/pfps/{$user['id']}/avatar.jpg";
+            if (!file_exists($pfpPath)) {
+                $pfpPath = "uploads/pfps/0/avatar.jpg";
+            }
+
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'name' => $user['name'],

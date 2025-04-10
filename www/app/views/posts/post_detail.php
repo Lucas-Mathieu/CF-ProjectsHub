@@ -21,19 +21,25 @@
             <div class="post-text">
                 <?= nl2br(htmlspecialchars($post['text'])) ?>
             </div>
+
+            <button class="like-btn" data-post-id="<?= $post['id'] ?>" aria-label="Like post">
+                <i class="fa <?= $post['liked'] ? 'fa-heart' : 'fa-heart-o' ?>" style="color: <?= $post['liked'] ? 'red' : 'gray' ?>"></i>
+                <span class="like-count"><?= $post['like_count'] ?? 0 ?></span>
+            </button>
+
         </article>
 
         <section class="comments-section">
             <h2>Commentaires</h2>
 
             <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
-                <form id="comment-form" class="comment-form">
+                <button id="toggle-comment-btn">Commenter</button>
+                <form id="comment-form" class="comment-form" style="display: none;">
                     <textarea name="text" placeholder="Écrire un commentaire..." required></textarea>
                     <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                    <button type="submit">Commenter</button>
+                    <button type="submit" id="submit-comment-btn">Envoyer</button>
                 </form>
             <?php endif; ?>
-
 
             <?php if (!empty($comments)) : ?>
                 <ul class="comments-list">
@@ -52,7 +58,7 @@
                                     <textarea name="text" placeholder="Votre réponse..." required></textarea>
                                     <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
                                     <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                                    <button type="submit">Envoyer</button>
+                                    <button type="submit" class="submit-reply-btn">Envoyer</button>
                                 </form>
                             <?php endif; ?>
 
@@ -79,6 +85,7 @@
         </section>
     </main>
 
-    <script src='/assets/js/ajax_comment.js'> </script>
+    <script src='/assets/js/ajax_comment.js'></script>
+    <script src='/assets/js/ajax_like.js'></script>
 
     <?php require_once '../app/views/partials/footer.php'; ?>

@@ -33,5 +33,47 @@ class PostModel
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getLikeByUserAndPost($userId, $postId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM post_like WHERE id_user = :user_id AND id_post = :post_id");
+        $stmt->execute(['user_id' => $userId, 'post_id' => $postId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getLikesCount($postId)
+    {
+        $sql = "SELECT like_count FROM post WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$postId]);
+        $result = $stmt->fetch();
+        return $result['like_count'];
+    }
+
+    public function addLike($userId, $postId)
+    {
+        $this->db->beginTransaction();
+
+        $stmt = $this->db->prepare("INSERT INTO post_like (id_user, id_post, date) VALUES (:user_id, :post_id, NOW())");
+        $stmt->execute(['user_id' => $userId, 'post_id' => $postId]);
+
+        $this->db->prepare("UPDATE post SET like_count = like_count + 1 WHERE id = :post_id")
+                ->execute(['post_id' => $postId]);
+
+        $this->db->commit();
+    }
+
+    public function removeLike($userId, $postId)
+    {
+        $this->db->beginTransaction();
+
+        $stmt = $this->db->prepare("DELETE FROM post_like WHERE id_user = :user_id AND id_post = :post_id");
+        $stmt->execute(['user_id' => $userId, 'post_id' => $postId]);
+
+        $this->db->prepare("UPDATE post SET like_count = GREATEST(like_count - 1, 0) WHERE id = :post_id")
+                ->execute(['post_id' => $postId]);
+
+        $this->db->commit();
+    }
 }
 ?>

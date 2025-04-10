@@ -84,7 +84,12 @@ switch (true) {
         $authController->deleteAccount();
         break;
 
-    // Ajouter un commentaire
+    // Add or remove a like (AJAX)
+    case $uri === '/ajax/toggle-like' && $method === 'POST':
+        $postController->toggleLike();
+        break;
+
+    // Add a comment
     case $uri === '/ajax/add-comment' && $method === 'POST':
         header('Content-Type: application/json');
         if (!isset($_SESSION['user']) || !$_SESSION['user']['is_verified']) {
@@ -92,7 +97,7 @@ switch (true) {
             exit;
         }
         $commentModel->addComment($_SESSION['user']['id'], $_POST['post_id'], $_POST['text']);
-        // Recharge juste le dernier commentaire pour l'ajouter dynamiquement
+        // Reloads the last comment
         $comments = $commentModel->getCommentsByPostId($_POST['post_id']);
         $lastComment = end($comments);
         ob_start();
@@ -101,7 +106,7 @@ switch (true) {
         echo json_encode(['success' => true, 'html' => $html]);
         exit;
 
-    // Ajouter une réponse
+    // Add a reply to a comment
     case $uri === '/ajax/add-reply' && $method === 'POST':
         header('Content-Type: application/json');
         if (!isset($_SESSION['user']) || !$_SESSION['user']['is_verified']) {
@@ -109,7 +114,7 @@ switch (true) {
             exit;
         }
         $commentModel->addReply($_SESSION['user']['id'], $_POST['post_id'], $_POST['comment_id'], $_POST['text']);
-        // Recharge la dernière réponse
+        // Reloads the last reply
         $comments = $commentModel->getCommentsByPostId($_POST['post_id'] ?? 0);
         $target = null;
         foreach ($comments as $comment) {
