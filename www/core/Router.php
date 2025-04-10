@@ -29,7 +29,7 @@ switch (true) {
 
     // Home page
     case $uri === '/':
-        $postController->showHomePage();
+        $postController->showPostsList();
         break;
 
     // Login page (GET) and login handling (POST)
@@ -83,6 +83,48 @@ switch (true) {
     case $uri === '/delete-account':
         $authController->deleteAccount();
         break;
+
+    // Ajouter un commentaire
+    case $uri === '/ajax/add-comment' && $method === 'POST':
+        header('Content-Type: application/json');
+        if (!isset($_SESSION['user']) || !$_SESSION['user']['is_verified']) {
+            echo json_encode(['success' => false, 'error' => 'Non autorisé']);
+            exit;
+        }
+        $commentModel->addComment($_SESSION['user']['id'], $_POST['post_id'], $_POST['text']);
+        // Recharge juste le dernier commentaire pour l'ajouter dynamiquement
+        $comments = $commentModel->getCommentsByPostId($_POST['post_id']);
+        $lastComment = end($comments);
+        ob_start();
+        include '../app/views/partials/comment.php';
+        $html = ob_get_clean();
+        echo json_encode(['success' => true, 'html' => $html]);
+        exit;
+
+    // Ajouter une réponse
+    case $uri === '/ajax/add-reply' && $method === 'POST':
+        header('Content-Type: application/json');
+        if (!isset($_SESSION['user']) || !$_SESSION['user']['is_verified']) {
+            echo json_encode(['success' => false, 'error' => 'Non autorisé']);
+            exit;
+        }
+        $commentModel->addReply($_SESSION['user']['id'], $_POST['post_id'], $_POST['comment_id'], $_POST['text']);
+        // Recharge la dernière réponse
+        $comments = $commentModel->getCommentsByPostId($_POST['post_id'] ?? 0);
+        $target = null;
+        foreach ($comments as $comment) {
+            if ($comment['id'] == $_POST['comment_id']) {
+                $target = $comment;
+                break;
+            }
+        }
+        $lastReply = end($target['replies']);
+        ob_start();
+        include '../app/views/partials/reply.php';
+        $html = ob_get_clean();
+        echo json_encode(['success' => true, 'html' => $html]);
+        exit;
+
 
     // Fallback 404
     default:

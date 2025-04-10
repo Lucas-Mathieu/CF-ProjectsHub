@@ -26,6 +26,15 @@
         <section class="comments-section">
             <h2>Commentaires</h2>
 
+            <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
+                <form id="comment-form" class="comment-form">
+                    <textarea name="text" placeholder="Écrire un commentaire..." required></textarea>
+                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                    <button type="submit">Commenter</button>
+                </form>
+            <?php endif; ?>
+
+
             <?php if (!empty($comments)) : ?>
                 <ul class="comments-list">
                     <?php foreach ($comments as $comment) : ?>
@@ -36,6 +45,16 @@
                                 <span><?= date('d M Y H:i', strtotime($comment['date'])) ?></span>
                             </div>
                             <p><?= nl2br(htmlspecialchars($comment['text'])) ?></p>
+
+                            <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
+                                <button class="reply-btn" data-comment-id="<?= $comment['id'] ?>">Répondre</button>
+                                <form class="reply-form" data-comment-id="<?= $comment['id'] ?>" style="display: none;">
+                                    <textarea name="text" placeholder="Votre réponse..." required></textarea>
+                                    <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                    <button type="submit">Envoyer</button>
+                                </form>
+                            <?php endif; ?>
 
                             <?php if (!empty($comment['replies'])) : ?>
                                 <ul class="comment-replies">
@@ -59,5 +78,7 @@
             <?php endif; ?>
         </section>
     </main>
+
+    <script src='/assets/js/ajax_comment.js'> </script>
 
     <?php require_once '../app/views/partials/footer.php'; ?>

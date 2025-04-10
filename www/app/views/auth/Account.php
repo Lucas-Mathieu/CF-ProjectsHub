@@ -14,7 +14,7 @@
         </form>
 
         <div class="pfp">
-            <img src="<?= htmlspecialchars($pfpPath)?>" alt="Image de profil" class="profile-image">
+            <img src="<?= htmlspecialchars($_SESSION['user']['pfp_path'])?>" alt="Image de profil" class="profile-image">
         </div>
 
         <form action="/upload-pfp" method="POST" enctype="multipart/form-data" class="upload-pfp-form">

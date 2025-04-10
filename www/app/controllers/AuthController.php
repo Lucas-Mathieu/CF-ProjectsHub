@@ -41,8 +41,10 @@ class AuthController
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'is_verified' => $user['is_verified'],
-                'is_admin' => $user['is_admin']
+                'is_admin' => $user['is_admin'],
+                'pfp_path' => "/$pfpPath"
             ];
+
             header('Location: /account');
             exit;
         } else {
@@ -78,12 +80,15 @@ class AuthController
         $user = $this->userModel->getUserByEmail($email);
 
         if ($user && password_verify($password, $user['password'])) {
+            $pfpPath = "uploads/pfps/0/avatar.jpg";
+
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'is_verified' => $user['is_verified'],
-                'is_admin' => $user['is_admin']
+                'is_admin' => $user['is_admin'],
+                'pfp_path' => "/$pfpPath"
             ];
             $_SESSION['success'] = "Account created.";
             header('Location: /account');

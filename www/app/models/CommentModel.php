@@ -13,7 +13,7 @@ class CommentModel
 
     public function getCommentsByPostId($postId)
     {
-        // Récupérer les commentaires du post
+        // Get all comments for the post
         $stmt = $this->db->prepare("
             SELECT post_comment.*, user.name AS commenter_name, user.id AS commenter_id
             FROM post_comment
@@ -24,16 +24,15 @@ class CommentModel
         $stmt->execute(['postId' => $postId]);
         $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Pour chaque commentaire, récupérer l'avatar et les réponses associées
         foreach ($comments as &$comment) {
-            // Ajouter l'avatar du commentateur
+            // Add pfp for each comment
             $pfpPath = "uploads/pfps/{$comment['commenter_id']}/avatar.jpg";
             if (!file_exists($pfpPath)) {
                 $pfpPath = "uploads/pfps/0/avatar.jpg"; // Avatar par défaut
             }
             $comment['commenter_pfp'] = "/{$pfpPath}"; // Chemin complet de l'avatar
 
-            // Récupérer les réponses du commentaire
+            // Get replies for this comment
             $stmtReplies = $this->db->prepare("
                 SELECT post_replies.*, user.name AS replier_name, user.id AS replier_id
                 FROM post_replies
@@ -44,20 +43,46 @@ class CommentModel
             $stmtReplies->execute(['commentId' => $comment['id']]);
             $replies = $stmtReplies->fetchAll(PDO::FETCH_ASSOC);
 
-            // Ajouter l'avatar à chaque réponse
+            // Add pfp for each reply
             foreach ($replies as &$reply) {
                 $replyPfpPath = "uploads/pfps/{$reply['replier_id']}/avatar.jpg";
                 if (!file_exists($replyPfpPath)) {
-                    $replyPfpPath = "uploads/pfps/0/avatar.jpg"; // Avatar par défaut
+                    $replyPfpPath = "uploads/pfps/0/avatar.jpg";
                 }
-                $reply['commenter_pfp'] = "/{$replyPfpPath}"; // Chemin complet de l'avatar
+                $reply['commenter_pfp'] = "/{$replyPfpPath}";
             }
 
-            // Ajouter les réponses au commentaire
             $comment['replies'] = $replies;
         }
 
         return $comments;
+    }
+
+    public function addComment($userId, $postId, $text)
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO post_comment (id_user, id_post, text, date)
+            VALUES (:userId, :postId, :text, NOW())
+        ");
+        $stmt->execute([
+            'userId' => $userId,
+            'postId' => $postId,
+            'text' => $text
+        ]);
+    }
+
+    public function addReply($userId, $postId, $commentId, $text)
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO post_replies (id_user, id_post, id_parent, text, date)
+            VALUES (:userId, :postId, :commentId, :text, NOW())
+        ");
+        $stmt->execute([
+            'userId' => $userId,
+            'postId' => $postId,
+            'commentId' => $commentId,
+            'text' => $text
+        ]);
     }
 }
 ?>

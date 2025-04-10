@@ -268,10 +268,29 @@ nav ul li a:hover {
     margin-bottom: 10px;
 }
 
-/* Animation pour la bulle de réponse */
 .reply p {
     font-size: 1rem;
     color: #333;
+}
+
+.comment-form, .reply-form {
+    margin-top: 1em;
+}
+textarea {
+    width: 100%;
+    min-height: 60px;
+    margin-bottom: 0.5em;
+}
+button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background: #0056b3;
 }
 
 
