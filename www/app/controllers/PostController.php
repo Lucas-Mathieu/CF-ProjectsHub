@@ -27,6 +27,7 @@ class PostController
         foreach ($posts as $post) {
             $postId = $post['id'];
             $postUserId = $post['id_user'];
+            $post['tags'] = $this->tagModel->getTagsByPostId($postId);
 
             // Get profile picture for the author of the post
             $pfpPath = "uploads/pfps/{$postUserId}/avatar.jpg";
@@ -65,6 +66,8 @@ class PostController
     public function showPostDetail($postId)
     {
         $post = $this->postModel->getPostById($postId);
+        $post['tags'] = $this->tagModel->getTagsByPostId($postId);
+        $post['techs'] = $this->techModel->getTechsByPostId($postId);
         
         if (!$post) {
             $_SESSION['error'] = "Post not found.";
@@ -171,6 +174,12 @@ class PostController
         if (!isset($_SESSION['user'])) {
             $_SESSION['error'] = "Vous devez être connecté pour publier.";
             header('Location: /login');
+            exit;
+        }
+
+        if (!$_SESSION['user']['is_verified']) {
+            $_SESSION['error'] = "Vous devez vérifier votre compte avant de publier.";
+            header('Location: /');
             exit;
         }
     

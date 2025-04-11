@@ -21,6 +21,14 @@
 
                         <h2><?= htmlspecialchars($post['title']) ?></h2>
 
+                        <?php if (!empty($post['tags'])): ?>
+                            <div class="post-tags">
+                                <?php foreach ($post['tags'] as $tag): ?>
+                                    <span class="tag"><?= htmlspecialchars($tag['name']) ?></span>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+
                         <?php if (!empty($post['image'])) : ?>
                             <div class="post-image-wrapper">
                                 <img src="<?= htmlspecialchars($post['image']) ?>" alt="Image du post" class="post-image" />

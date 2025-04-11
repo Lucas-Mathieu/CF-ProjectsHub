@@ -12,6 +12,24 @@
 
             <h1><?= htmlspecialchars($post['title']) ?></h1>
 
+            <div class="post-tags-techs">
+                <?php if (!empty($post['tags'])): ?>
+                    <div class="tags">
+                        <?php foreach ($post['tags'] as $tag): ?>
+                            <span class="tag-badge"><?= htmlspecialchars($tag['name']) ?></span>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($post['techs'])): ?>
+                    <div class="techs">
+                        <?php foreach ($post['techs'] as $tech): ?>
+                            <span class="tech-badge"><?= htmlspecialchars($tech['name']) ?></span>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
             <?php if (!empty($post['image'])) : ?>
                 <div class="post-image-wrapper">
                     <img src="<?= htmlspecialchars($post['image']) ?>" alt="Image du post" class="post-image-full" />
