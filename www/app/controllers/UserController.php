@@ -46,12 +46,21 @@ class UserController
         $userId = $_SESSION['user']['id'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['avatar'])) {
-            $uploadDir = __DIR__ . "/../../public/uploads/pfps/{$userId}";
+            $uploadDir = __DIR__ . "/../../www/uploads/pfps/{$userId}";
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
 
             $targetPath = $uploadDir . "/avatar.jpg";
+        }
+
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (in_array($_FILES['avatar']['type'], $allowedTypes)) {
+            move_uploaded_file($_FILES['avatar']['tmp_name'], $targetPath);
+            $_SESSION['user']['pfp_path'] = "/uploads/pfps/{$userId}/avatar.jpg";
+            $_SESSION['success'] = "Photo de profil mise à jour.";
+        } else {
+            $_SESSION['error'] = "Format de fichier invalide.";
         }
 
         header('Location: /account');

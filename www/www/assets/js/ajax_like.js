@@ -41,8 +41,7 @@ document.querySelectorAll('.like-btn').forEach(button => {
 
             countSpan.textContent = result.like_count;
         } else if (result.error === 'Non autorisé') {
-            alert('Veuillez vous connecter pour cela.');
-            window.location.assign("/login");
+            alert('Veuillez vous connecter à un compte vérifié pour cela.');
         } else {
             alert(result.error);
         }

@@ -12,13 +12,13 @@ class AuthController
     // Show login form
     public function showLoginForm()
     {
-        require '../app/views/auth/Login.php';
+        require '../app/views/auth/login.php';
     }
 
     // Show register form
     public function showRegisterForm()
     {
-        require '../app/views/auth/Register.php';
+        require '../app/views/auth/register.php';
     }
 
     // Handle login logic

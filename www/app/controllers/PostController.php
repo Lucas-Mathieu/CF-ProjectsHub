@@ -139,7 +139,7 @@ class PostController
 
     public function toggleLike()
     {
-        if (!isset($_SESSION['user'])) {
+        if (!isset($_SESSION['user']) || (!$_SESSION['user']['is_verified'])) {
             echo json_encode(['success' => false, 'error' => 'Non autorisé']);
             exit;
         }
@@ -199,7 +199,7 @@ class PostController
     
         // Upload image
         if ($hasImage) {
-            $postDir = __DIR__ . "/../../public/uploads/posts/{$postId}";
+            $postDir = __DIR__ . "/../../www/uploads/posts/{$postId}";
             if (!file_exists($postDir)) {
                 mkdir($postDir, 0777, true);
             }
