@@ -76,7 +76,7 @@ class PostModel
         $this->db->commit();
     }
 
-    public function createPost($userId, $title, $content, $hasImage = false)
+    public function createPost($userId, $title, $content)
     {
         $stmt = $this->db->prepare("
             INSERT INTO post (id_user, title, text, date_created, date_modified, like_count)
@@ -89,6 +89,22 @@ class PostModel
         ]);
     
         return $this->db->lastInsertId();
+    }
+
+    public function attachTagsToPost($postId, $tagIds)
+    {
+        $stmt = $this->db->prepare("INSERT INTO post_tag (id_post, id_tag) VALUES (:post_id, :tag_id)");
+        foreach ($tagIds as $tagId) {
+            $stmt->execute(['post_id' => $postId, 'tag_id' => $tagId]);
+        }
+    }
+
+    public function attachTechsToPost($postId, $techIds)
+    {
+        $stmt = $this->db->prepare("INSERT INTO post_tech (id_post, id_tech) VALUES (:post_id, :tech_id)");
+        foreach ($techIds as $techId) {
+            $stmt->execute(['post_id' => $postId, 'tech_id' => $techId]);
+        }
     }
 }
 ?>

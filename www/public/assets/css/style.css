@@ -390,6 +390,7 @@ textarea {
     width: 100%;
     min-height: 60px;
     margin-bottom: 0.5em;
+    resize: vertical;
 }
 button {
     background: #007BFF;
@@ -422,6 +423,7 @@ button:hover:not(.like-btn) {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    margin-bottom: 10px;
 }
 
 .form-input {
@@ -502,6 +504,38 @@ button:hover:not(.like-btn) {
     font-weight: bold;
 }
 
+/* CREATE POST*/
+.tag {
+    margin-bottom: 10px;
+}
+
+.option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.hidden-checkbox {
+    display: none;
+}
+
+.option-label {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #f1f3f5;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.hidden-checkbox:checked + .option-label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
 
 /* FOOTER */
 footer {

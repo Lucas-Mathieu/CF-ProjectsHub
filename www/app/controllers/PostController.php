@@ -4,11 +4,15 @@ class PostController
 {
     private $postModel;
     private $commentModel;
+    private $tagModel;
+    private $techModel;
 
-    public function __construct($postModel, $commentModel)
+    public function __construct($postModel, $commentModel, $tagModel, $techModel)
     {
         $this->postModel = $postModel;
         $this->commentModel = $commentModel;
+        $this->tagModel = $tagModel;
+        $this->techModel = $techModel;
     }
 
     public function showPostsList()
@@ -125,6 +129,8 @@ class PostController
 
     public function showCreatePost()
     {
+        $tags = $this->tagModel->getAllTags();
+        $techs = $this->techModel->getAllTechs();
         require_once '../app/views/posts/create_post.php';
     }
 
@@ -179,11 +185,12 @@ class PostController
         }
     
         $hasImage = !empty($_FILES['image']['tmp_name']);
-        $postId = $this->postModel->createPost($userId, $title, $content, $hasImage);
+
+        $postId = $this->postModel->createPost($userId, $title, $content);
     
         // Upload image
         if ($hasImage) {
-            $postDir = "uploads/posts/$postId";
+            $postDir = __DIR__ . "/../../public/uploads/posts/{$postId}";
             if (!file_exists($postDir)) {
                 mkdir($postDir, 0777, true);
             }
@@ -191,7 +198,15 @@ class PostController
             $targetPath = "$postDir/post.jpg";
             move_uploaded_file($_FILES['image']['tmp_name'], $targetPath);
         }
-    
+
+        // Get tags and techs from the form
+        $tags = $_POST['tags'] ?? [];
+        $techs = $_POST['techs'] ?? [];
+
+        // Insert them into the database
+        $this->postModel->attachTagsToPost($postId, $tags);
+        $this->postModel->attachTechsToPost($postId, $techs);
+
         header('Location: /posts');
         exit;
     }    

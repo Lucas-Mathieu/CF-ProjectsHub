@@ -52,15 +52,6 @@ class UserController
             }
 
             $targetPath = $uploadDir . "/avatar.jpg";
-
-            // Sécuriser l'upload (facultatif : tu peux ajouter plus de vérifications)
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (in_array($_FILES['avatar']['type'], $allowedTypes)) {
-                move_uploaded_file($_FILES['avatar']['tmp_name'], $targetPath);
-                $_SESSION['success'] = "Photo de profil mise à jour.";
-            } else {
-                $_SESSION['error'] = "Format de fichier invalide.";
-            }
         }
 
         header('Location: /account');
@@ -77,9 +68,8 @@ class UserController
             exit();
         }
 
-        // Checker if the request method is POST
+        // Check if the request method is POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Obtenir les données mises à jour de l'utilisateur depuis le formulaire
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
 

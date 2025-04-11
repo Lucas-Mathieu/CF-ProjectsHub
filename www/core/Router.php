@@ -10,14 +10,18 @@ require_once '../app/controllers/UserController.php';
 require_once '../app/models/PostModel.php';
 require_once '../app/models/UserModel.php';
 require_once '../app/models/CommentModel.php';
+require_once '../app/models/TagModel.php';
+require_once '../app/models/TechModel.php';
 
 // Instantiate models and controllers
 $postModel = new PostModel();
 $userModel = new UserModel();
 $commentModel = new CommentModel();
+$tagModel = new TagModel();
+$techModel = new TechModel();
 
 $authController = new AuthController($userModel);
-$postController = new PostController($postModel, $commentModel);
+$postController = new PostController($postModel, $commentModel, $tagModel, $techModel);
 $userController = new UserController($userModel);
 
 // Get the URI and HTTP method
