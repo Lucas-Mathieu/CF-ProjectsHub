@@ -40,8 +40,11 @@ document.querySelectorAll('.like-btn').forEach(button => {
             }
 
             countSpan.textContent = result.like_count;
+        } else if (result.error === 'Non autorisé') {
+            alert('Veuillez vous connecter pour cela.');
+            window.location.assign("/login");
         } else {
-            alert('Erreur lors du like/unlike.');
+            alert(result.error);
         }
     });
 });

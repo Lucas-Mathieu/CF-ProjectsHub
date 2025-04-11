@@ -50,7 +50,7 @@ class AuthController
                 'pfp_path' => "/$pfpPath"
             ];
 
-            header('Location: /account');
+            header('Location: /');
             exit;
         } else {
             $_SESSION['error'] = "Email ou mot de passe invalide.";
