@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 10, 2025 at 08:29 PM
+-- Generation Time: Apr 11, 2025 at 11:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -31,7 +31,7 @@ CREATE TABLE `post` (
   `id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `title` varchar(30) NOT NULL,
-  `text` text NOT NULL,
+  `text` varchar(3000) NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_modified` datetime NOT NULL DEFAULT current_timestamp(),
   `like_count` int(11) NOT NULL DEFAULT 0
@@ -44,6 +44,22 @@ CREATE TABLE `post` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `post_archive`
+--
+
+CREATE TABLE `post_archive` (
+  `id` int(11) NOT NULL,
+  `id_post` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `title` varchar(30) NOT NULL,
+  `text` varchar(3000) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_modified` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `post_comment`
 --
 
@@ -51,7 +67,7 @@ CREATE TABLE `post_comment` (
   `id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `id_post` int(11) NOT NULL,
-  `text` text NOT NULL,
+  `text` varchar(250) NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -72,6 +88,10 @@ CREATE TABLE `post_like` (
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `post_like`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -83,7 +103,7 @@ CREATE TABLE `post_replies` (
   `id_user` int(11) NOT NULL,
   `id_post` int(11) NOT NULL,
   `id_parent` int(11) NOT NULL,
-  `text` text NOT NULL,
+  `text` varchar(250) NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -110,6 +130,18 @@ CREATE TABLE `post_tag` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `post_tech`
+--
+
+CREATE TABLE `post_tech` (
+  `id` int(11) NOT NULL,
+  `id_tech` int(11) NOT NULL,
+  `id_post` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tag`
 --
 
@@ -120,6 +152,21 @@ CREATE TABLE `tag` (
 
 --
 -- Dumping data for table `tag`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tech`
+--
+
+CREATE TABLE `tech` (
+  `id` int(11) NOT NULL,
+  `name` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tech`
 --
 
 -- --------------------------------------------------------
@@ -153,12 +200,20 @@ ALTER TABLE `post`
   ADD KEY `post_FK` (`id_user`);
 
 --
+-- Indexes for table `post_archive`
+--
+ALTER TABLE `post_archive`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `post_archive_FK` (`id_user`),
+  ADD KEY `post_archive_FK2` (`id_post`);
+
+--
 -- Indexes for table `post_comment`
 --
 ALTER TABLE `post_comment`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `comment_FK1` (`id_user`) USING BTREE,
-  ADD KEY `comment_FK2` (`id_post`) USING BTREE;
+  ADD KEY `comment_FK1` (`id_user`),
+  ADD KEY `comment_FK2` (`id_post`);
 
 --
 -- Indexes for table `post_like`
@@ -186,11 +241,23 @@ ALTER TABLE `post_tag`
   ADD KEY `tag_FK2` (`id_post`);
 
 --
+-- Indexes for table `post_tech`
+--
+ALTER TABLE `post_tech`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tag`
 --
 ALTER TABLE `tag`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_tag_name` (`name`);
+
+--
+-- Indexes for table `tech`
+--
+ALTER TABLE `tech`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `user`
@@ -207,25 +274,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `post_archive`
+--
+ALTER TABLE `post_archive`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_comment`
 --
 ALTER TABLE `post_comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `post_like`
 --
 ALTER TABLE `post_like`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `post_replies`
 --
 ALTER TABLE `post_replies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `post_tag`
@@ -234,10 +307,22 @@ ALTER TABLE `post_tag`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `post_tech`
+--
+ALTER TABLE `post_tech`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tech`
+--
+ALTER TABLE `tech`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -256,11 +341,18 @@ ALTER TABLE `post`
   ADD CONSTRAINT `post_FK` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`);
 
 --
+-- Constraints for table `post_archive`
+--
+ALTER TABLE `post_archive`
+  ADD CONSTRAINT `post_archive_FK` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `post_archive_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
+
+--
 -- Constraints for table `post_comment`
 --
 ALTER TABLE `post_comment`
-  ADD CONSTRAINT `post_FK1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `post_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
+  ADD CONSTRAINT `comment_FK1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `comment_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
 
 --
 -- Constraints for table `post_like`
