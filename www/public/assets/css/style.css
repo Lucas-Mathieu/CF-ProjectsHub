@@ -52,6 +52,59 @@ nav ul li a:hover {
     border-radius: 5px;
 }
 
+/* Mobile Menu Styles */
+.toggle-menu {
+    display: none;
+    font-size: 1.8rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 30px;
+    background-color: #343a40;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    width: 200px;
+    padding: 15px;
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mobile-menu ul li a {
+    color: #fff;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.mobile-menu ul li a:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+    }
+
+    .toggle-menu {
+        display: block;
+    }
+}
+
 /* POSTS LIST */
 .create-post-btn {
     display: inline-block;
