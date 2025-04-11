@@ -64,7 +64,6 @@ document.querySelectorAll('.comment-form').forEach(commentForm => {
     });
 });
 
-
 // Hide / show reply forms
 document.querySelectorAll('.reply-btn').forEach(btn => {
     btn.addEventListener('click', () => {
