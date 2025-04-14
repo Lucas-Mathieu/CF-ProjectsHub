@@ -20,11 +20,6 @@
                 <?php if (isset($_SESSION['user'])): ?>
 					<li><a href="/posts">Posts</a></li>
                     <li><a href="/account">Account</a></li>
-
-					<?php if ($_SESSION['user']['is_admin']): ?>
-						<li><a href="/admin">Admin</a></li>
-					<?php endif; ?>
-
                 <?php else: ?>
 					<li><a href="/posts">Posts</a></li>
                     <li><a href="/login">Login</a></li>
@@ -39,11 +34,6 @@
                     <?php if (isset($_SESSION['user'])): ?>
                         <li><a href="/posts">Posts</a></li>
                         <li><a href="/account">Account</a></li>
-
-                        <?php if ($_SESSION['user']['is_admin']): ?>
-                            <li><a href="/admin">Admin</a></li>
-                        <?php endif; ?>
-
                     <?php else: ?>
                         <li><a href="/posts">Posts</a></li>
                         <li><a href="/login">Login</a></li>

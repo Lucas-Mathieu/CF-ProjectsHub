@@ -8,6 +8,19 @@
                     <strong><?= htmlspecialchars($post['author_name']) ?></strong> - 
                     <?= date('d M Y H:i', strtotime($post['date_created'])) ?>
                 </p>
+
+                <?php if (!empty($_SESSION['user']) && ($_SESSION['user']['id'] === $post['id_user'] || $_SESSION['user']['is_admin'])): ?>
+                    <div class="post-actions">
+                        <?php if ($_SESSION['user']['id'] === $post['id_user']): ?>
+                            <a href="/edit-post/<?= $post['id'] ?>" class="btn btn-secondary">Modifier</a>
+                        <?php endif; ?>
+                        <form action="/delete-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" style="display: inline;">
+                            <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </div>
+                <?php endif; ?>
+
             </div>
 
             <h1><?= htmlspecialchars($post['title']) ?></h1>

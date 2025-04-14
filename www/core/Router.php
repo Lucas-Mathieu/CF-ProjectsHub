@@ -57,11 +57,6 @@ switch (true) {
             : $userController->showAccountPage();
         break;
 
-    // Admin dashboard (GET only)
-    case $uri === '/admin':
-        $userController->showAdminDashboard();
-        break;
-
     // List all posts
     case $uri === '/posts' && $method === 'GET':
         $postController->showPostsList();
@@ -140,6 +135,26 @@ switch (true) {
         $html = ob_get_clean();
         echo json_encode(['success' => true, 'html' => $html]);
         exit;
+
+    // Afficher la page d'édition d'un post
+    case preg_match('#^/edit-post/(\d+)$#', $uri, $matches):
+        $postId = $matches[1];
+        $postController->showEditPost($postId);
+        break;
+
+    // Mettre à jour un post
+    case preg_match('#^/update-post/(\d+)$#', $uri, $matches):
+        if ($method === 'POST') {
+            $postId = $matches[1];
+            $postController->updatePost($postId);
+        }
+        break;
+
+    // Delete a post
+    case preg_match('#^/delete-post/(\d+)$#', $uri, $matches):
+        $postId = $matches[1];
+        $postController->deletePost($postId);
+        break;
 
     // Fallback 404
     default:

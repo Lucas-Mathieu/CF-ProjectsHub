@@ -7,6 +7,11 @@
         <h1 class="posts-title">Tous les posts</h1>
     <?php endif; ?>
 
+    <?php if (!empty($_SESSION['error'])): ?>
+        <p class="error-msg"><?= $_SESSION['error'] ?></p>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
+
         <?php if (!empty($posts)) : ?>
             <div class="posts-grid">
                 <?php foreach ($posts as $post) : ?>

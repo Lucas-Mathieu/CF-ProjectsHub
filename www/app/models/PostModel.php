@@ -76,7 +76,7 @@ class PostModel
         $this->db->commit();
     }
 
-    public function createPost($userId, $title, $content)
+    public function createPost($userId, $title, $text)
     {
         $stmt = $this->db->prepare("
             INSERT INTO post (id_user, title, text, date_created, date_modified, like_count)
@@ -85,7 +85,7 @@ class PostModel
         $stmt->execute([
             'id_user' => $userId,
             'title' => $title,
-            'text' => $content
+            'text' => $text
         ]);
     
         return $this->db->lastInsertId();
@@ -93,18 +93,40 @@ class PostModel
 
     public function attachTagsToPost($postId, $tagIds)
     {
-        $stmt = $this->db->prepare("INSERT INTO post_tag (id_post, id_tag) VALUES (:post_id, :tag_id)");
+        $stmt = $this->db->prepare("INSERT INTO post_tag (id_post, id_tag) VALUES (:id_post, :id_tag)");
         foreach ($tagIds as $tagId) {
-            $stmt->execute(['post_id' => $postId, 'tag_id' => $tagId]);
+            $stmt->execute(['id_post' => $postId, 'id_tag' => $tagId]);
         }
     }
 
     public function attachTechsToPost($postId, $techIds)
     {
-        $stmt = $this->db->prepare("INSERT INTO post_tech (id_post, id_tech) VALUES (:post_id, :tech_id)");
+        $stmt = $this->db->prepare("INSERT INTO post_tech (id_post, id_tech) VALUES (:id_post, :id_tech)");
         foreach ($techIds as $techId) {
-            $stmt->execute(['post_id' => $postId, 'tech_id' => $techId]);
+            $stmt->execute(['id_post' => $postId, 'id_tech' => $techId]);
         }
     }
+
+    public function updatePost($postId, $title, $text, $tags, $techs) {
+        // Update basic info
+        $stmt = $this->db->prepare("UPDATE post SET title = ?, text = ? WHERE id = ?");
+        $stmt->execute([$title, $text, $postId]);
+    
+        // Update tags (exemple : delete puis insert)
+        $this->db->prepare("DELETE FROM post_tag WHERE id_post = ?")->execute([$postId]);
+        foreach ($tags as $tagId) {
+            $this->db->prepare("INSERT INTO post_tag (id_post, id_tag) VALUES (?, ?)")->execute([$postId, $tagId]);
+        }
+    
+        // Update techs
+        $this->db->prepare("DELETE FROM post_tech WHERE id_post = ?")->execute([$postId]);
+        foreach ($techs as $techId) {
+            $this->db->prepare("INSERT INTO post_tech (id_post, id_tech) VALUES (?, ?)")->execute([$postId, $techId]);
+        }
+    }
+    
+    public function deletePost($postId) {    
+        $this->db->prepare("UPDATE post SET is_deleted = 1 WHERE id = ?")->execute([$postId]);
+    }    
 }
 ?>

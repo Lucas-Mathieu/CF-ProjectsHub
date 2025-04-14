@@ -25,6 +25,10 @@ class PostController
 
         // Loop through each post
         foreach ($posts as $post) {
+            if ($post['is_deleted']) {
+                continue; // Skip deleted posts
+            }
+
             $postId = $post['id'];
             $postUserId = $post['id_user'];
             $post['tags'] = $this->tagModel->getTagsByPostId($postId);
@@ -66,6 +70,19 @@ class PostController
     public function showPostDetail($postId)
     {
         $post = $this->postModel->getPostById($postId);
+
+        if (!$post) {
+            $_SESSION['error'] = "Post not found.";
+            header('Location: /posts');
+            exit;
+        }
+
+        if ($post['is_deleted'] == 1 && $_SESSION['user']['is_admin'] == 0) {
+            $_SESSION['error'] = "Post not found.";
+            header('Location: /posts');
+            exit;
+        }
+
         $post['tags'] = $this->tagModel->getTagsByPostId($postId);
         $post['techs'] = $this->techModel->getTechsByPostId($postId);
         
@@ -137,6 +154,60 @@ class PostController
         require_once '../app/views/posts/create_post.php';
     }
 
+    public function showEditPost($postId) {
+        $post = $this->postModel->getPostById($postId);
+        if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
+            $_SESSION['error'] = "Action non autorisée ou post introuvable.";
+            header('Location: /posts');
+            exit;
+        }
+    
+        $tags = $this->tagModel->getAllTags();
+        $techs = $this->techModel->getAllTechs();
+    
+        $postTags = $this->tagModel->getTagsByPostId($postId);
+        $postTechs = $this->techModel->getTechsByPostId($postId);
+    
+        $post['tags'] = array_column($postTags, 'id');
+        $post['techs'] = array_column($postTechs, 'id');
+    
+        include '../app/views/posts/edit.php';
+    }
+    
+    public function updatePost($postId) {
+        $post = $this->postModel->getPostById($postId);
+        if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
+            $_SESSION['error'] = "Action non autorisée.";
+            header('Location: /posts');
+            exit;
+        }
+    
+        $title = trim($_POST['title'] ?? '');
+        $content = trim($_POST['content'] ?? '');
+        $tags = $_POST['tags'] ?? [];
+        $techs = $_POST['techs'] ?? [];
+    
+        if (empty($title) || empty($content)) {
+            $_SESSION['error'] = "Titre et contenu sont requis.";
+            header("Location: /edit-post?id=$postId");
+            exit;
+        }
+    
+        $this->postModel->updatePost($postId, $title, $content, $tags, $techs);
+    
+        if (!empty($_FILES['image']['tmp_name'])) {
+            $postDir = __DIR__ . "/../../www/uploads/posts/{$postId}";
+            if (!file_exists($postDir)) {
+                mkdir($postDir, 0777, true);
+            }
+            $targetPath = "$postDir/post.jpg";
+            move_uploaded_file($_FILES['image']['tmp_name'], $targetPath);
+        }
+    
+        header("Location: /post/$postId");
+        exit;
+    }
+
     public function toggleLike()
     {
         if (!isset($_SESSION['user']) || (!$_SESSION['user']['is_verified'])) {
@@ -166,6 +237,19 @@ class PostController
             'liked' => $liked,
             'like_count' => $likeCount
         ]);
+        exit;
+    }
+
+    public function deletePost($postId) {
+        $post = $this->postModel->getPostById($postId);
+        if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
+            $_SESSION['error'] = "Action non autorisée ou post introuvable.";
+            header('Location: /posts');
+            exit;
+        }
+
+        $this->postModel->deletePost($postId);
+        header("Location: /posts");
         exit;
     }
 
