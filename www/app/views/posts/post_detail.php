@@ -16,7 +16,7 @@
                     <?php endif; ?>
                     <form action="/delete-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" style="display: inline;">
                         <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                        <button type="submit" class="btn btn-red">Supprimer</button>
                     </form>
                 </div>
             <?php endif; ?>
@@ -62,7 +62,7 @@
         <h2>Commentaires</h2>
 
         <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
-            <button id="toggle-comment-btn">Commenter</button>
+            <button id="toggle-comment-btn" class="btn">Commenter</button>
             <form id="comment-form" class="comment-form" style="display: none;">
                 <textarea name="text" placeholder="Écrire un commentaire..." required></textarea>
                 <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
@@ -81,15 +81,23 @@
                         </div>
                         <p><?= nl2br(htmlspecialchars($comment['text'])) ?></p>
 
-                        <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
-                            <button class="reply-btn" data-comment-id="<?= $comment['id'] ?>">Répondre</button>
-                            <form class="reply-form" data-comment-id="<?= $comment['id'] ?>" style="display: none;">
-                                <textarea name="text" placeholder="Votre réponse..." required></textarea>
-                                <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
-                                <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                                <button type="submit" class="submit-reply-btn">Envoyer</button>
-                            </form>
-                        <?php endif; ?>
+                        <div class="comment-actions">
+                            <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
+                                <button class="reply-btn btn" data-comment-id="<?= $comment['id'] ?>">Répondre</button>
+                                <form class="reply-form" data-comment-id="<?= $comment['id'] ?>" style="display: none;">
+                                    <textarea name="text" placeholder="Votre réponse..." required></textarea>
+                                    <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                    <button type="submit" class="submit-reply-btn">Envoyer</button>
+                                </form>
+                            <?php endif; ?>
+                            <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_admin']): ?>
+                                <form action="/delete-comment/<?= $comment['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');" style="display: inline;">
+                                    <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                                    <button type="submit" class="btn btn-red">Supprimer</button>
+                                </form>
+                            <?php endif; ?>
+                        </div>
 
                         <?php if (!empty($comment['replies'])) : ?>
                             <ul class="comment-replies">
@@ -101,6 +109,14 @@
                                             <span><?= date('d M Y H:i', strtotime($reply['date'])) ?></span>
                                         </div>
                                         <p><?= nl2br(htmlspecialchars($reply['text'])) ?></p>
+                                        <?php if (!empty($_SESSION['user']) && $_SESSION['user']['is_admin']): ?>
+                                            <div class="reply-actions">
+                                                <form action="/delete-reply/<?= $reply['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?');" style="display: inline;">
+                                                    <input type="hidden" name="reply_id" value="<?= $reply['id'] ?>">
+                                                    <button type="submit" class="btn btn-red">Supprimer</button>
+                                                </form>
+                                            </div>
+                                        <?php endif; ?>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>

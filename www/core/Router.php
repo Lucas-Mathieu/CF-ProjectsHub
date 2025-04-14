@@ -156,6 +156,18 @@ switch (true) {
         $postController->deletePost($postId);
         break;
 
+    // Delete a comment
+    case preg_match('#^/delete-comment/(\d+)$#', $uri, $matches):
+        $commentId = $matches[1];
+        $postController->deleteComment($commentId);
+        break;
+
+    // Delete a reply
+    case preg_match('#^/delete-reply/(\d+)$#', $uri, $matches):
+        $replyId = $matches[1];
+        $postController->deleteReply($replyId);
+        break;
+
     // Fallback 404
     default:
         http_response_code(404);

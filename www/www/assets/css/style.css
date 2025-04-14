@@ -500,7 +500,7 @@ button:hover:not(.like-btn) {
 }
 
 .btn-red:hover {
-    background-color: #c82333;
+    background-color: #c82333 !important;
 }
 
 .btn-red-outline {

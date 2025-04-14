@@ -154,7 +154,8 @@ class PostController
         require_once '../app/views/posts/create_post.php';
     }
 
-    public function showEditPost($postId) {
+    public function showEditPost($postId) 
+    {
         $post = $this->postModel->getPostById($postId);
         if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
             $_SESSION['error'] = "Action non autorisée ou post introuvable.";
@@ -174,7 +175,8 @@ class PostController
         include '../app/views/posts/edit.php';
     }
     
-    public function updatePost($postId) {
+    public function updatePost($postId) 
+    {
         $post = $this->postModel->getPostById($postId);
         if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
             $_SESSION['error'] = "Action non autorisée.";
@@ -240,7 +242,8 @@ class PostController
         exit;
     }
 
-    public function deletePost($postId) {
+    public function deletePost($postId) 
+    {
         $post = $this->postModel->getPostById($postId);
         if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
             $_SESSION['error'] = "Action non autorisée ou post introuvable.";
@@ -302,6 +305,46 @@ class PostController
 
         header('Location: /posts');
         exit;
-    }    
+    }
+
+    public function deleteComment($commentId) 
+    {
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour supprimer un commentaire.";
+            header('Location: /login');
+            exit;
+        }
+
+        $comment = $this->commentModel->getCommentById($commentId);
+        if (!$comment || ($_SESSION['user']['is_admin'] != 1)) {
+            $_SESSION['error'] = "Action non autorisée ou commentaire introuvable.";
+            header('Location: /posts');
+            exit;
+        }
+
+        $this->commentModel->deleteComment($commentId);
+        header("Location: /post/{$comment['id_post']}");
+        exit;
+    }
+
+    public function deleteReply($replyId)
+    {
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour supprimer un commentaire.";
+            header('Location: /login');
+            exit;
+        }
+
+        $reply = $this->commentModel->getReplyById($replyId);
+        if (!$reply || ($_SESSION['user']['is_admin'] != 1)) {
+            $_SESSION['error'] = "Action non autorisée ou commentaire introuvable.";
+            header('Location: /posts');
+            exit;
+        }
+
+        $this->commentModel->deleteReply($replyId);
+        header("Location: /post/{$reply['id_post']}");
+        exit;
+    }
 }
 ?>

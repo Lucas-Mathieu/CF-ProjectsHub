@@ -11,6 +11,36 @@ class CommentModel
         $this->db = database::getConnection();
     }
 
+    public function getCommentById($commentId)
+    {
+        // Get the comment by ID
+        $stmt = $this->db->prepare("
+            SELECT post_comment.*, user.name AS commenter_name, user.id AS commenter_id
+            FROM post_comment
+            JOIN user ON post_comment.id_user = user.id
+            WHERE post_comment.id = :commentId
+        ");
+        $stmt->execute(['commentId' => $commentId]);
+        $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $comment;
+    }
+
+    public function getReplyById($replyId)
+    {
+        // Get the reply by ID
+        $stmt = $this->db->prepare("
+            SELECT post_replies.*, user.name AS replier_name, user.id AS replier_id
+            FROM post_replies
+            JOIN user ON post_replies.id_user = user.id
+            WHERE post_replies.id = :replyId
+        ");
+        $stmt->execute(['replyId' => $replyId]);
+        $reply = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $reply;
+    }
+
     public function getCommentsByPostId($postId)
     {
         // Get all comments for the post
@@ -83,6 +113,21 @@ class CommentModel
             'commentId' => $commentId,
             'text' => $text
         ]);
+    }
+
+    public function deleteComment($commentId)
+    {
+        $stmt = $this->db->prepare("DELETE FROM post_replies WHERE id_parent = :commentId");
+        $stmt->execute(['commentId' => $commentId]);
+
+        $stmt = $this->db->prepare("DELETE FROM post_comment WHERE id = :commentId");
+        $stmt->execute(['commentId' => $commentId]);
+    }
+
+    public function deleteReply($replyId)
+    {
+        $stmt = $this->db->prepare("DELETE FROM post_replies WHERE id = :replyId");
+        $stmt->execute(['replyId' => $replyId]);
     }
 }
 ?>
