@@ -107,26 +107,67 @@ class PostModel
         }
     }
 
-    public function updatePost($postId, $title, $text, $tags, $techs) {
-        // Update basic info
-        $stmt = $this->db->prepare("UPDATE post SET title = ?, text = ? WHERE id = ?");
+    public function updatePost($postId, $title, $text, $tags, $techs) 
+    {
+        // Archive le post avant la mise à jour
+        $this->archivePost($postId);
+
+        // Mettre à jour les informations de base, y compris date_modified
+        $stmt = $this->db->prepare("UPDATE post SET title = ?, text = ?, date_modified = NOW() WHERE id = ?");
         $stmt->execute([$title, $text, $postId]);
-    
-        // Update tags (exemple : delete puis insert)
+
+        // Mettre à jour les tags
         $this->db->prepare("DELETE FROM post_tag WHERE id_post = ?")->execute([$postId]);
-        foreach ($tags as $tagId) {
-            $this->db->prepare("INSERT INTO post_tag (id_post, id_tag) VALUES (?, ?)")->execute([$postId, $tagId]);
+        if (!empty($tags)) {
+            $stmt = $this->db->prepare("INSERT INTO post_tag (id_post, id_tag) VALUES (?, ?)");
+            foreach ($tags as $tagId) {
+                $stmt->execute([$postId, $tagId]);
+            }
         }
-    
-        // Update techs
+
+        // Mettre à jour les technologies
         $this->db->prepare("DELETE FROM post_tech WHERE id_post = ?")->execute([$postId]);
-        foreach ($techs as $techId) {
-            $this->db->prepare("INSERT INTO post_tech (id_post, id_tech) VALUES (?, ?)")->execute([$postId, $techId]);
+        if (!empty($techs)) {
+            $stmt = $this->db->prepare("INSERT INTO post_tech (id_post, id_tech) VALUES (?, ?)");
+            foreach ($techs as $techId) {
+                $stmt->execute([$postId, $techId]);
+            }
         }
     }
     
-    public function deletePost($postId) {    
+    public function deletePost($postId) 
+    {    
         $this->db->prepare("UPDATE post SET is_deleted = 1 WHERE id = ?")->execute([$postId]);
-    }    
+    }
+
+    public function archivePost($postId)
+    {
+        // Mettre à jour date_modified dans la table post
+        $stmt = $this->db->prepare("UPDATE post SET date_modified = NOW() WHERE id = ?");
+        $stmt->execute([$postId]);
+
+        // Récupérer les données du post
+        $stmt = $this->db->prepare("SELECT id, id_user, title, text, date_created, date_modified FROM post WHERE id = ?");
+        $stmt->execute([$postId]);
+        $post = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$post) {
+            throw new Exception("Post introuvable.");
+        }
+
+        // Insérer dans post_archive avec la nouvelle date_modified
+        $stmt = $this->db->prepare("
+            INSERT INTO post_archive (id_post, id_user, title, text, date_created, date_modified)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $post['id'],
+            $post['id_user'],
+            $post['title'],
+            $post['text'],
+            $post['date_created'],
+            $post['date_modified']
+        ]);
+    }
 }
 ?>
