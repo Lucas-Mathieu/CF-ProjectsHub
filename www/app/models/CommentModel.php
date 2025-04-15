@@ -123,7 +123,7 @@ class CommentModel
         $stmt = $this->db->prepare("DELETE FROM post_comment WHERE id = :commentId");
         $stmt->execute(['commentId' => $commentId]);
     }
-
+    
     public function deleteReply($replyId)
     {
         $stmt = $this->db->prepare("DELETE FROM post_replies WHERE id = :replyId");

@@ -37,7 +37,7 @@ switch (true) {
         break;
 
     // Deleted posts
-    case $uri === '/deleted-posts':
+    case $uri === '/admin/deleted-posts':
         $postController->showPostsList(true);
         break;
 
@@ -60,6 +60,35 @@ switch (true) {
         $method === 'POST' 
             ? $userController->updateProfile()
             : $userController->showAccountPage();
+        break;
+
+    // Admin users page
+    case $uri === '/admin/users':
+        $userController->showAdminUsersPage();
+        break;
+
+    // Toggle user verification
+    case preg_match('#^/admin/verify/(\d+)$#', $uri, $matches):
+        if ($method === 'POST') {
+            $userId = $matches[1];
+            $userController->toggleVerify($userId);
+        }
+        break;
+
+    // Toggle user admin status
+    case preg_match('#^/admin/toggle-admin/(\d+)$#', $uri, $matches):
+        if ($method === 'POST') {
+            $userId = $matches[1];
+            $userController->toggleAdmin($userId);
+        }
+        break;
+
+    // Delete user
+    case preg_match('#^/admin/delete-user/(\d+)$#', $uri, $matches):
+        if ($method === 'POST') {
+            $userId = $matches[1];
+            $userController->deleteUser($userId);
+        }
         break;
 
     // List all posts
@@ -141,13 +170,13 @@ switch (true) {
         echo json_encode(['success' => true, 'html' => $html]);
         exit;
 
-    // Afficher la page d'édition d'un post
+    // Show edit post page
     case preg_match('#^/edit-post/(\d+)$#', $uri, $matches):
         $postId = $matches[1];
         $postController->showEditPost($postId);
         break;
 
-    // Mettre à jour un post
+    // Update a post
     case preg_match('#^/update-post/(\d+)$#', $uri, $matches):
         if ($method === 'POST') {
             $postId = $matches[1];
@@ -161,7 +190,7 @@ switch (true) {
         $postController->deletePost($postId);
         break;
 
-    // Resotre
+    // Restore a post
     case preg_match('#^/restore-post/(\d+)$#', $uri, $matches):
         $postId = $matches[1];
         $postController->restorePost($postId);

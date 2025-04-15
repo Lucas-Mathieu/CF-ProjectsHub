@@ -2,9 +2,9 @@
 
 <main class="posts-container">
     <?php if ($archive): ?>
-        <h1 class="archive-title">Archive</h1>
+        <h1 class="posts-title">Archive</h1>
     <?php else : ?>
-        <h1 class="archive-title">Tous les posts</h1>
+        <h1 class="posts-title">Tous les posts</h1>
     <?php endif; ?>
 
     <?php if (isset($_SESSION['user']) && $_SESSION['user']['is_verified'] && !$archive) : ?>
