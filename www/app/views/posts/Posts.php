@@ -43,12 +43,12 @@
             <div class="sort-group">
                 <label for="sort">Trier par :</label>
                 <select id="sort" name="sort">
-                    <option value="likes_desc" <?= ($_GET['sort'] ?? '') === 'likes_desc' ? 'selected' : '' ?>>Likes (décroissant)</option>
-                    <option value="likes_asc" <?= ($_GET['sort'] ?? '') === 'likes_asc' ? 'selected' : '' ?>>Likes (croissant)</option>
-                    <option value="created_desc" <?= ($_GET['sort'] ?? '') === 'created_desc' ? 'selected' : '' ?>>Date création (décroissant)</option>
-                    <option value="created_asc" <?= ($_GET['sort'] ?? '') === 'created_asc' ? 'selected' : '' ?>>Date création (croissant)</option>
-                    <option value="modified_desc" <?= ($_GET['sort'] ?? '') === 'modified_desc' ? 'selected' : '' ?>>Date modification (décroissant)</option>
-                    <option value="modified_asc" <?= ($_GET['sort'] ?? '') === 'modified_asc' ? 'selected' : '' ?>>Date modification (croissant)</option>
+                    <option value="likes_desc" <?= ($_GET['sort'] ?? '') === 'likes_desc' ? 'selected' : '' ?>>Likes ↓</option>
+                    <option value="likes_asc" <?= ($_GET['sort'] ?? '') === 'likes_asc' ? 'selected' : '' ?>>Likes ↑</option>
+                    <option value="created_desc" <?= ($_GET['sort'] ?? '') === 'created_desc' ? 'selected' : '' ?>>Date création ↓</option>
+                    <option value="created_asc" <?= ($_GET['sort'] ?? '') === 'created_asc' ? 'selected' : '' ?>>Date création ↑</option>
+                    <option value="modified_desc" <?= ($_GET['sort'] ?? '') === 'modified_desc' ? 'selected' : '' ?>>Date modification ↓</option>
+                    <option value="modified_asc" <?= ($_GET['sort'] ?? '') === 'modified_asc' ? 'selected' : '' ?>>Date modification ↑</option>
                 </select>
             </div>
         </div>

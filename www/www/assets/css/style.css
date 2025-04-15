@@ -174,10 +174,6 @@ nav ul li a:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.sort-group {
-    margin-top: 10px;
-}
-
 .sort-group label {
     display: block;
     font-size: 0.95rem;
