@@ -109,14 +109,14 @@ class PostModel
 
     public function updatePost($postId, $title, $text, $tags, $techs) 
     {
-        // Archive le post avant la mise à jour
+        // Archive the posts before updating
         $this->archivePost($postId);
 
-        // Mettre à jour les informations de base, y compris date_modified
+        // Update the post
         $stmt = $this->db->prepare("UPDATE post SET title = ?, text = ?, date_modified = NOW() WHERE id = ?");
         $stmt->execute([$title, $text, $postId]);
 
-        // Mettre à jour les tags
+        // Update tags
         $this->db->prepare("DELETE FROM post_tag WHERE id_post = ?")->execute([$postId]);
         if (!empty($tags)) {
             $stmt = $this->db->prepare("INSERT INTO post_tag (id_post, id_tag) VALUES (?, ?)");
@@ -125,7 +125,7 @@ class PostModel
             }
         }
 
-        // Mettre à jour les technologies
+        // Update techs
         $this->db->prepare("DELETE FROM post_tech WHERE id_post = ?")->execute([$postId]);
         if (!empty($techs)) {
             $stmt = $this->db->prepare("INSERT INTO post_tech (id_post, id_tech) VALUES (?, ?)");
@@ -142,11 +142,16 @@ class PostModel
 
     public function archivePost($postId)
     {
-        // Mettre à jour date_modified dans la table post
-        $stmt = $this->db->prepare("UPDATE post SET date_modified = NOW() WHERE id = ?");
-        $stmt->execute([$postId]);
+        $postImagePath = "uploads/posts/{$postId}/post.jpg";
+        if (file_exists($postImagePath)) {
+            $now = date('Y-m-d_H-i-s');
+            $archivePath = "uploads/archived_posts/{$postId}/{$now}.jpg";
+            if (!file_exists(dirname($archivePath))) {
+                mkdir(dirname($archivePath), 0777, true);
+            }
+            rename($postImagePath, $archivePath);
+        }
 
-        // Récupérer les données du post
         $stmt = $this->db->prepare("SELECT id, id_user, title, text, date_created, date_modified FROM post WHERE id = ?");
         $stmt->execute([$postId]);
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -155,7 +160,6 @@ class PostModel
             throw new Exception("Post introuvable.");
         }
 
-        // Insérer dans post_archive avec la nouvelle date_modified
         $stmt = $this->db->prepare("
             INSERT INTO post_archive (id_post, id_user, title, text, date_created, date_modified)
             VALUES (?, ?, ?, ?, ?, ?)
