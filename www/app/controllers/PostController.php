@@ -15,8 +15,14 @@ class PostController
         $this->techModel = $techModel;
     }
 
-    public function showPostsList()
+    public function showPostsList($archive)
     {
+        if ($archive === 1 && $_SESSION['user']['is_admin'] != 1) {
+            $_SESSION['error'] = "Action non autorisée.";
+            header('Location: /posts');
+            exit;
+        }
+
         $search = $_GET['search'] ?? '';
         $tags = $_GET['tags'] ?? [];
         $techs = $_GET['techs'] ?? [];
@@ -28,11 +34,13 @@ class PostController
         $posts = $this->postModel->searchPosts($search, $_GET['tags'] ?? [], $_GET['techs'] ?? [], $sort);
         $userId = $_SESSION['user']['id'] ?? null;
 
+        $baseUrl = "http://localhost/";
+
         $updatedPosts = [];
 
         foreach ($posts as $post) {
-            if ($post['is_deleted']) {
-                continue; // Ignore deleted posts
+            if ($post['is_deleted'] == !$archive) {
+                continue; // Ignore unwanted
             }
 
             $postId = $post['id'];
@@ -40,15 +48,15 @@ class PostController
             $post['tags'] = $this->tagModel->getTagsByPostId($postId);
 
             // User pfp
-            $pfpPath = "Uploads/pfps/{$postUserId}/avatar.jpg";
+            $pfpPath = "uploads/pfps/{$postUserId}/avatar.jpg";
             if (!file_exists($pfpPath)) {
-                $pfpPath = "Uploads/pfps/0/avatar.jpg";
+                $pfpPath = "uploads/pfps/0/avatar.jpg";
             }
-            $post['author_pfp'] = "http://localhost/" . $pfpPath;
+            $post['author_pfp'] = $baseUrl . $pfpPath;
 
             // Post image
-            $postImagePath = "Uploads/posts/{$postId}/post.jpg";
-            $post['image'] = file_exists($postImagePath) ? "http://localhost/" . $postImagePath : null;
+            $postImagePath = "uploads/posts/{$postId}/post.jpg";
+            $post['image'] = file_exists($postImagePath) ? $baseUrl . $postImagePath : null;
 
             // Check user like
             $liked = false;
@@ -77,6 +85,8 @@ class PostController
     {
         $post = $this->postModel->getPostById($postId);
 
+        $baseUrl = "http://localhost/";
+
         if (!$post) {
             $_SESSION['error'] = "Post not found.";
             header('Location: /posts');
@@ -99,9 +109,6 @@ class PostController
         }
 
         $userId = $_SESSION['user']['id'] ?? null; // Get the logged-in user ID
-
-        // Base URL for profile and post images
-        $baseUrl = "http://localhost/";
 
         // Get author's profile picture
         $pfpPath = "uploads/pfps/{$post['id_user']}/avatar.jpg";
@@ -258,6 +265,20 @@ class PostController
         }
 
         $this->postModel->deletePost($postId);
+        header("Location: /posts");
+        exit;
+    }
+
+    public function restorePost($postId) 
+    {
+        $post = $this->postModel->getPostById($postId);
+        if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
+            $_SESSION['error'] = "Action non autorisée ou post introuvable.";
+            header('Location: /posts');
+            exit;
+        }
+
+        $this->postModel->restorePost($postId);
         header("Location: /posts");
         exit;
     }

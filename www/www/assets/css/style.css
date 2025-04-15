@@ -642,11 +642,19 @@ button:hover:not(.like-btn) {
     margin-bottom: 10px;
 }
 
-.option-group {
+.option-group-search {
     z-index: 1000;
     display: flex;
     position: absolute;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.option-group {
+    z-index: 1000;
+    display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;

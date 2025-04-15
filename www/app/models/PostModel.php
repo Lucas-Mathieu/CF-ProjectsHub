@@ -140,6 +140,11 @@ class PostModel
         $this->db->prepare("UPDATE post SET is_deleted = 1 WHERE id = ?")->execute([$postId]);
     }
 
+    public function restorePost($postId) 
+    {    
+        $this->db->prepare("UPDATE post SET is_deleted = 0 WHERE id = ?")->execute([$postId]);
+    }
+
     public function archivePost($postId)
     {
         $postImagePath = "uploads/posts/{$postId}/post.jpg";
@@ -149,7 +154,7 @@ class PostModel
             if (!file_exists(dirname($archivePath))) {
                 mkdir(dirname($archivePath), 0777, true);
             }
-            rename($postImagePath, $archivePath);
+            copy($postImagePath, $archivePath);
         }
 
         $stmt = $this->db->prepare("SELECT id, id_user, title, text, date_created, date_modified FROM post WHERE id = ?");
@@ -182,7 +187,6 @@ class PostModel
             JOIN user u ON p.id_user = u.id 
             LEFT JOIN post_tag pt ON p.id = pt.id_post 
             LEFT JOIN post_tech ptech ON p.id = ptech.id_post 
-            WHERE p.is_deleted = 0
         ";
         
         $params = [];

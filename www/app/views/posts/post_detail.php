@@ -14,10 +14,18 @@
                     <?php if ($_SESSION['user']['id'] === $post['id_user']): ?>
                         <a href="/edit-post/<?= $post['id'] ?>" class="btn btn-secondary">Modifier</a>
                     <?php endif; ?>
-                    <form action="/delete-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" style="display: inline;">
-                        <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                        <button type="submit" class="btn btn-red">Supprimer</button>
-                    </form>
+
+                    <?php if ($post['is_deleted']): ?>
+                        <form action="/restore-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir restaurer ce post ?');" style="display: inline;">
+                            <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                            <button type="submit" class="btn btn-secondary">Restaurer</button>
+                        </form>
+                    <?php else: ?>
+                        <form action="/delete-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" style="display: inline;">
+                            <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                            <button type="submit" class="btn btn-red">Supprimer</button>
+                        </form>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>

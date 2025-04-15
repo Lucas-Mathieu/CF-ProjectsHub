@@ -1,10 +1,14 @@
 <?php require_once '../app/views/partials/header.php'; ?>
 
 <main class="posts-container">
-    <?php if (isset($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
-        <a href="/create-post" class="create-post-btn">Créer un post</a>
+    <?php if ($archive): ?>
+        <h1 class="archive-title">Archive</h1>
     <?php else : ?>
-        <h1 class="posts-title">Tous les posts</h1>
+        <h1 class="archive-title">Tous les posts</h1>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['user']) && $_SESSION['user']['is_verified'] && !$archive) : ?>
+        <a href="/create-post" class="create-post-btn">Créer un post</a>
     <?php endif; ?>
 
     <?php if (!empty($_SESSION['error'])): ?>
@@ -12,6 +16,7 @@
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
 
+    <?php if (!$archive): ?>
     <!-- Formulaire de recherche et filtrage -->
     <form method="GET" action="/posts" class="search-filter-form">
         <div class="search-bar">
@@ -22,7 +27,7 @@
         <div class="filters">
             <div class="filter-group">
                 <button type="button" class="toggle-filter-btn" data-target="tags-filter">Tags</button>
-                <div id="tags-filter" class="filter-options option-group" style="display: none;">
+                <div id="tags-filter" class="filter-options option-group-search" style="display: none;">
                     <?php foreach ($tags as $tag): ?>
                         <input type="checkbox" name="tags[]" id="tag-<?= $tag['id'] ?>" value="<?= $tag['id'] ?>" class="hidden-checkbox" <?= in_array($tag['id'], $_GET['tags'] ?? []) ? 'checked' : '' ?>>
                         <label for="tag-<?= $tag['id'] ?>" class="option-label"><?= htmlspecialchars($tag['name']) ?></label>
@@ -32,7 +37,7 @@
 
             <div class="filter-group">
                 <button type="button" class="toggle-filter-btn" data-target="techs-filter">Technologies</button>
-                <div id="techs-filter" class="filter-options option-group" style="display: none;">
+                <div id="techs-filter" class="filter-options option-group-search" style="display: none;">
                     <?php foreach ($techs as $tech): ?>
                         <input type="checkbox" name="techs[]" id="tech-<?= $tech['id'] ?>" value="<?= $tech['id'] ?>" class="hidden-checkbox" <?= in_array($tech['id'], $_GET['techs'] ?? []) ? 'checked' : '' ?>>
                         <label for="tech-<?= $tech['id'] ?>" class="option-label"><?= htmlspecialchars($tech['name']) ?></label>
@@ -55,6 +60,7 @@
 
         <button type="submit" class="filter-btn">Appliquer</button>
     </form>
+    <?php endif; ?>
 
     <?php if (!empty($posts)) : ?>
         <div class="posts-grid">

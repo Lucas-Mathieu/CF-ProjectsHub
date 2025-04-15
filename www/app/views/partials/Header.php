@@ -25,6 +25,10 @@
                     <li><a href="/login">Connexion</a></li>
                     <li><a href="/register">Creer un compte</a></li>
                 <?php endif; ?>
+
+                <?php if ($_SESSION['user']['is_admin']): ?>
+                    <li><a href="/deleted-posts">Archive</a></li>
+                <?php endif; ?>
             </ul>
 
             <a href="#" class="toggle-menu">☰</a>
@@ -38,6 +42,10 @@
                         <li><a href="/posts">Posts</a></li>
                         <li><a href="/login">Connexion</a></li>
                         <li><a href="/register">Creer un compte</a></li>
+                    <?php endif; ?>
+
+                    <?php if ($_SESSION['user']['is_admin']): ?>
+                        <li><a href="/deleted-posts">Archive</a></li>
                     <?php endif; ?>
                 </ul>
             </mobile>

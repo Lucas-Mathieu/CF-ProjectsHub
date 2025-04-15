@@ -33,7 +33,12 @@ switch (true) {
 
     // Home page
     case $uri === '/':
-        $postController->showPostsList();
+        $postController->showPostsList(false);
+        break;
+
+    // Deleted posts
+    case $uri === '/deleted-posts':
+        $postController->showPostsList(true);
         break;
 
     // Login page (GET) and login handling (POST)
@@ -59,7 +64,7 @@ switch (true) {
 
     // List all posts
     case $uri === '/posts' && $method === 'GET':
-        $postController->showPostsList();
+        $postController->showPostsList(false);
         break;
 
     // Show a specific post and its comments
@@ -154,6 +159,12 @@ switch (true) {
     case preg_match('#^/delete-post/(\d+)$#', $uri, $matches):
         $postId = $matches[1];
         $postController->deletePost($postId);
+        break;
+
+    // Resotre
+    case preg_match('#^/restore-post/(\d+)$#', $uri, $matches):
+        $postId = $matches[1];
+        $postController->restorePost($postId);
         break;
 
     // Delete a comment
