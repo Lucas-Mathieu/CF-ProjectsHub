@@ -173,5 +173,69 @@ class PostModel
             $post['date_modified']
         ]);
     }
+
+    public function searchPosts($search = '', $tags = [], $techs = [], $sort = 'created_desc')
+    {
+        $query = "
+            SELECT DISTINCT p.*, u.name AS author_name 
+            FROM post p 
+            JOIN user u ON p.id_user = u.id 
+            LEFT JOIN post_tag pt ON p.id = pt.id_post 
+            LEFT JOIN post_tech ptech ON p.id = ptech.id_post 
+            WHERE p.is_deleted = 0
+        ";
+        
+        $params = [];
+
+        // Key words
+        if (!empty($search)) {
+            $query .= " AND (p.title LIKE :search OR p.text LIKE :search)";
+            $params['search'] = "%$search%";
+        }
+
+        // Tags
+        if (!empty($tags)) {
+            $tags = array_map('intval', $tags);
+            $placeholders = implode(',', array_fill(0, count($tags), '?'));
+            $query .= " AND pt.id_tag IN ($placeholders)";
+            $params = array_merge($params, $tags);
+        }
+
+        // Techs
+        if (!empty($techs)) {
+            $techs = array_map('intval', $techs);
+            $placeholders = implode(',', array_fill(0, count($techs), '?'));
+            $query .= " AND ptech.id_tech IN ($placeholders)";
+            $params = array_merge($params, $techs);
+        }
+
+        // Sorting
+        switch ($sort) {
+            case 'likes_asc':
+                $query .= " ORDER BY p.like_count ASC, p.date_created DESC";
+                break;
+            case 'likes_desc':
+                $query .= " ORDER BY p.like_count DESC, p.date_created DESC";
+                break;
+            case 'created_asc':
+                $query .= " ORDER BY p.date_created ASC";
+                break;
+            case 'created_desc':
+                $query .= " ORDER BY p.date_created DESC";
+                break;
+            case 'modified_asc':
+                $query .= " ORDER BY p.date_modified ASC";
+                break;
+            case 'modified_desc':
+                $query .= " ORDER BY p.date_modified DESC";
+                break;
+            default:
+                $query .= " ORDER BY p.date_created DESC";
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

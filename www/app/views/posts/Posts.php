@@ -1,6 +1,6 @@
-    <?php require_once '../app/views/partials/header.php'; ?>
+<?php require_once '../app/views/partials/header.php'; ?>
 
-    <main class="posts-container">
+<main class="posts-container">
     <?php if (isset($_SESSION['user']) && $_SESSION['user']['is_verified']) : ?>
         <a href="/create-post" class="create-post-btn">Créer un post</a>
     <?php else : ?>
@@ -12,57 +12,128 @@
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
 
-        <?php if (!empty($posts)) : ?>
-            <div class="posts-grid">
-                <?php foreach ($posts as $post) : ?>
-                    <div class="post-card" data-href="/post/<?= $post['id'] ?>">
-                        <div class="post-author">
-                            <img src="<?= htmlspecialchars($post['author_pfp']) ?>" alt="Auteur" class="author-pfp" />
-                            <p class="post-meta">
-                                <strong><?= htmlspecialchars($post['author_name']) ?></strong>
-                                <?= date('d M Y H:i', strtotime($post['date_created'])) ?>
-                            </p>
-                        </div>
+    <!-- Formulaire de recherche et filtrage -->
+    <form method="GET" action="/posts" class="search-filter-form">
+        <div class="search-bar">
+            <label for="search">Rechercher :</label>
+            <input type="text" id="search" name="search" placeholder="Mots-clés dans titre ou texte" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+        </div>
 
-                        <h2><?= htmlspecialchars($post['title']) ?></h2>
-
-                        <?php if (!empty($post['tags'])): ?>
-                            <div class="post-tags">
-                                <?php foreach ($post['tags'] as $tag): ?>
-                                    <span class="tag"><?= htmlspecialchars($tag['name']) ?></span>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php if (!empty($post['image'])) : ?>
-                            <div class="post-image-wrapper">
-                                <img src="<?= htmlspecialchars($post['image']) ?>" alt="Image du post" class="post-image" />
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                            $limit = !empty($post['image']) ? 150 : 800;
-                            $text = $post['text'];
-                            $isTruncated = mb_strlen($text) > $limit;
-
-                            if ($isTruncated) {
-                                $text = mb_substr($text, 0, $limit) . '... Voir plus';
-                            }
-                            echo '<p>' . nl2br(htmlspecialchars($text)) . '</p>';
-                        ?>
-
-                        <button class="like-btn" data-post-id="<?= $post['id'] ?>" aria-label="Like post">
-                            <i class="fa <?= $post['liked'] ? 'fa-heart' : 'fa-heart-o' ?>" style="color: <?= $post['liked'] ? 'red' : 'gray' ?>"></i>
-                            <span class="like-count"><?= $post['like_count'] ?? 0 ?></span>
-                        </button>
-                    </div>
-                <?php endforeach; ?>
+        <div class="filters">
+            <div class="filter-group">
+                <button type="button" class="toggle-filter-btn" data-target="tags-filter">Tags</button>
+                <div id="tags-filter" class="filter-options option-group" style="display: none;">
+                    <?php foreach ($tags as $tag): ?>
+                        <input type="checkbox" name="tags[]" id="tag-<?= $tag['id'] ?>" value="<?= $tag['id'] ?>" class="hidden-checkbox" <?= in_array($tag['id'], $_GET['tags'] ?? []) ? 'checked' : '' ?>>
+                        <label for="tag-<?= $tag['id'] ?>" class="option-label"><?= htmlspecialchars($tag['name']) ?></label>
+                    <?php endforeach; ?>
+                </div>
             </div>
-        <?php else : ?>
-            <p>Pas encore de posts.</p>
-        <?php endif; ?>
-    </main>
 
-    <script src='/assets/js/ajax_like.js'></script>
+            <div class="filter-group">
+                <button type="button" class="toggle-filter-btn" data-target="techs-filter">Technologies</button>
+                <div id="techs-filter" class="filter-options option-group" style="display: none;">
+                    <?php foreach ($techs as $tech): ?>
+                        <input type="checkbox" name="techs[]" id="tech-<?= $tech['id'] ?>" value="<?= $tech['id'] ?>" class="hidden-checkbox" <?= in_array($tech['id'], $_GET['techs'] ?? []) ? 'checked' : '' ?>>
+                        <label for="tech-<?= $tech['id'] ?>" class="option-label"><?= htmlspecialchars($tech['name']) ?></label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
-    <?php require_once '../app/views/partials/footer.php'; ?>
+            <div class="sort-group">
+                <label for="sort">Trier par :</label>
+                <select id="sort" name="sort">
+                    <option value="likes_desc" <?= ($_GET['sort'] ?? '') === 'likes_desc' ? 'selected' : '' ?>>Likes (décroissant)</option>
+                    <option value="likes_asc" <?= ($_GET['sort'] ?? '') === 'likes_asc' ? 'selected' : '' ?>>Likes (croissant)</option>
+                    <option value="created_desc" <?= ($_GET['sort'] ?? '') === 'created_desc' ? 'selected' : '' ?>>Date création (décroissant)</option>
+                    <option value="created_asc" <?= ($_GET['sort'] ?? '') === 'created_asc' ? 'selected' : '' ?>>Date création (croissant)</option>
+                    <option value="modified_desc" <?= ($_GET['sort'] ?? '') === 'modified_desc' ? 'selected' : '' ?>>Date modification (décroissant)</option>
+                    <option value="modified_asc" <?= ($_GET['sort'] ?? '') === 'modified_asc' ? 'selected' : '' ?>>Date modification (croissant)</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="filter-btn">Appliquer</button>
+    </form>
+
+    <?php if (!empty($posts)) : ?>
+        <div class="posts-grid">
+            <?php foreach ($posts as $post) : ?>
+                <div class="post-card" data-href="/post/<?= $post['id'] ?>">
+                    <div class="post-author">
+                        <img src="<?= htmlspecialchars($post['author_pfp']) ?>" alt="Auteur" class="author-pfp" />
+                        <p class="post-meta">
+                            <strong><?= htmlspecialchars($post['author_name']) ?></strong>
+                            <?= date('d M Y H:i', strtotime($post['date_created'])) ?>
+                        </p>
+                    </div>
+
+                    <h2><?= htmlspecialchars($post['title']) ?></h2>
+
+                    <?php if (!empty($post['tags'])): ?>
+                        <div class="post-tags">
+                            <?php foreach ($post['tags'] as $tag): ?>
+                                <span class="tag"><?= htmlspecialchars($tag['name']) ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($post['image'])) : ?>
+                        <div class="post-image-wrapper">
+                            <img src="<?= htmlspecialchars($post['image']) ?>" alt="Image du post" class="post-image" />
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                        $limit = !empty($post['image']) ? 150 : 800;
+                        $text = $post['text'];
+                        $isTruncated = mb_strlen($text) > $limit;
+
+                        if ($isTruncated) {
+                            $text = mb_substr($text, 0, $limit) . '... Voir plus';
+                        }
+                        echo '<p>' . nl2br(htmlspecialchars($text)) . '</p>';
+                    ?>
+
+                    <button class="like-btn" data-post-id="<?= $post['id'] ?>" aria-label="Like post">
+                        <i class="fa <?= $post['liked'] ? 'fa-heart' : 'fa-heart-o' ?>" style="color: <?= $post['liked'] ? 'red' : 'gray' ?>"></i>
+                        <span class="like-count"><?= $post['like_count'] ?? 0 ?></span>
+                    </button>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else : ?>
+        <p>Aucun post ne correspond aux critères.</p>
+    <?php endif; ?>
+</main>
+
+<script src='/assets/js/ajax_like.js'></script>
+<script>
+    // Gestion des boutons de bascule pour les filtres
+    document.querySelectorAll('.toggle-filter-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const target = document.getElementById(targetId);
+            const isHidden = target.style.display === 'none' || !target.style.display;
+
+            // Masquer tous les autres filtres
+            document.querySelectorAll('.filter-options').forEach(opt => {
+                opt.style.display = 'none';
+            });
+
+            // Afficher ou masquer le filtre ciblé
+            target.style.display = isHidden ? 'flex' : 'none';
+        });
+    });
+
+    // Fermer les filtres si on clique en dehors
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.filter-group') && !e.target.closest('.toggle-filter-btn')) {
+            document.querySelectorAll('.filter-options').forEach(opt => {
+                opt.style.display = 'none';
+            });
+        }
+    });
+</script>
+
+<?php require_once '../app/views/partials/footer.php'; ?>

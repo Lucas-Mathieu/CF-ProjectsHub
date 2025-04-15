@@ -17,34 +17,40 @@ class PostController
 
     public function showPostsList()
     {
-        // Fetch posts from the model
-        $posts = $this->postModel->getAllPosts();
-        $userId = $_SESSION['user']['id'] ?? null; // Get the current logged-in user id
+        $search = $_GET['search'] ?? '';
+        $tags = $_GET['tags'] ?? [];
+        $techs = $_GET['techs'] ?? [];
+        $sort = $_GET['sort'] ?? 'created_desc';
+
+        $tags = $this->tagModel->getAllTags();
+        $techs = $this->techModel->getAllTechs();
+
+        $posts = $this->postModel->searchPosts($search, $_GET['tags'] ?? [], $_GET['techs'] ?? [], $sort);
+        $userId = $_SESSION['user']['id'] ?? null;
 
         $updatedPosts = [];
 
-        // Loop through each post
         foreach ($posts as $post) {
             if ($post['is_deleted']) {
-                continue; // Skip deleted posts
+                continue; // Ignore deleted posts
             }
 
             $postId = $post['id'];
             $postUserId = $post['id_user'];
             $post['tags'] = $this->tagModel->getTagsByPostId($postId);
 
-            // Get profile picture for the author of the post
-            $pfpPath = "uploads/pfps/{$postUserId}/avatar.jpg";
+            // User pfp
+            $pfpPath = "Uploads/pfps/{$postUserId}/avatar.jpg";
             if (!file_exists($pfpPath)) {
-                $pfpPath = "uploads/pfps/0/avatar.jpg";
+                $pfpPath = "Uploads/pfps/0/avatar.jpg";
             }
-            $post['author_pfp'] = $pfpPath;
+            $post['author_pfp'] = "http://localhost/" . $pfpPath;
 
-            // Get the image associated with the post
-            $postImagePath = "uploads/posts/{$postId}/post.jpg";
-            $post['image'] = file_exists($postImagePath) ? $postImagePath : null;
+            // Post image
+            $postImagePath = "Uploads/posts/{$postId}/post.jpg";
+            $post['image'] = file_exists($postImagePath) ? "http://localhost/" . $postImagePath : null;
 
-            // Check if the current user has liked the post
+            // Check user like
             $liked = false;
             if ($userId) {
                 $stmt = $this->postModel->getLikeByUserAndPost($userId, $postId);
@@ -52,16 +58,16 @@ class PostController
                     $liked = true;
                 }
             }
-            $post['liked'] = $liked; // Set the liked status
+            $post['liked'] = $liked;
 
-            // Format human-readable date
+            // Format date
             $createdAt = new DateTime($post['date_created']);
             $post['created_at_human'] = $createdAt->format('d M Y, H:i');
 
-            $updatedPosts[] = $post; // Add the post with updated information
+            $updatedPosts[] = $post;
         }
 
-        // Pass the updated posts to the view
+        // Passer les données à la vue
         $posts = $updatedPosts;
 
         require_once '../app/views/posts/posts.php';
