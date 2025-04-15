@@ -19,11 +19,11 @@
             <ul>
                 <?php if (isset($_SESSION['user'])): ?>
 					<li><a href="/posts">Posts</a></li>
-                    <li><a href="/account">Account</a></li>
+                    <li><a href="/account">Compte</a></li>
                 <?php else: ?>
 					<li><a href="/posts">Posts</a></li>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
+                    <li><a href="/login">Connexion</a></li>
+                    <li><a href="/register">Creer un compte</a></li>
                 <?php endif; ?>
             </ul>
 
@@ -33,11 +33,11 @@
                 <ul>
                     <?php if (isset($_SESSION['user'])): ?>
                         <li><a href="/posts">Posts</a></li>
-                        <li><a href="/account">Account</a></li>
+                        <li><a href="/account">Compte</a></li>
                     <?php else: ?>
                         <li><a href="/posts">Posts</a></li>
-                        <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
+                        <li><a href="/login">Connexion</a></li>
+                        <li><a href="/register">Creer un compte</a></li>
                     <?php endif; ?>
                 </ul>
             </mobile>
