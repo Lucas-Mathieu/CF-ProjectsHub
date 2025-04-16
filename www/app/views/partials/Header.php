@@ -28,7 +28,7 @@
 
                 <?php if ($_SESSION['user']['is_admin']): ?>
                     <li><a href="/admin/users">Gestion des utilisateurs</a></li>
-                    <li><a href="/admin/deleted-posts">Archive</a></li>
+                    <li><a href="/admin/archive">Archive</a></li>
                 <?php endif; ?>
             </ul>
 
@@ -47,7 +47,7 @@
 
                     <?php if ($_SESSION['user']['is_admin']): ?>
                         <li><a href="/admin/users">Gestion des utilisateurs</a></li>
-                        <li><a href="/admin/deleted-posts">Archive</a></li>
+                        <li><a href="/admin/archive">Archive</a></li>
                     <?php endif; ?>
                 </ul>
             </mobile>

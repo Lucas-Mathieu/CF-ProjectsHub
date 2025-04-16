@@ -269,6 +269,20 @@ class PostController
         exit;
     }
 
+    public function nukePost($postId)
+    {
+        $post = $this->postModel->getPostById($postId);
+        if (!$post || ($_SESSION['user']['id'] !== $post['id_user'] && $_SESSION['user']['is_admin'] != 1)) {
+            $_SESSION['error'] = "Action non autorisée ou post introuvable.";
+            header('Location: /posts');
+            exit;
+        }
+
+        $this->postModel->nukePost($postId);
+        header("Location: /admin/archive");
+        exit;
+    }
+
     public function restorePost($postId) 
     {
         $post = $this->postModel->getPostById($postId);

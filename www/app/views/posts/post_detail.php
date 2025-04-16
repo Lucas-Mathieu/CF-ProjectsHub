@@ -20,10 +20,15 @@
                             <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
                             <button type="submit" class="btn btn-secondary">Restaurer</button>
                         </form>
-                    <?php else: ?>
-                        <form action="/delete-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" style="display: inline;">
+
+                        <form action="/nuke-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" style="display: inline;">
                             <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
                             <button type="submit" class="btn btn-red">Supprimer</button>
+                        </form>
+                    <?php else: ?>
+                        <form action="/delete-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver ce post ?');" style="display: inline;">
+                            <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                            <button type="submit" class="btn btn-red">Archiver</button>
                         </form>
                     <?php endif; ?>
                 </div>

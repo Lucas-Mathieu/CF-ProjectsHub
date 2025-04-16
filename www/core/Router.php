@@ -37,7 +37,7 @@ switch (true) {
         break;
 
     // Deleted posts
-    case $uri === '/admin/deleted-posts':
+    case $uri === '/admin/archive':
         $postController->showPostsList(true);
         break;
 
@@ -184,10 +184,16 @@ switch (true) {
         }
         break;
 
-    // Delete a post
+    // Archive a post
     case preg_match('#^/delete-post/(\d+)$#', $uri, $matches):
         $postId = $matches[1];
         $postController->deletePost($postId);
+        break;
+
+    // Delete a post for good
+    case preg_match('#^/nuke-post/(\d+)$#', $uri, $matches):
+        $postId = $matches[1];
+        $postController->nukePost($postId);
         break;
 
     // Restore a post

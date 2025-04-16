@@ -109,8 +109,8 @@ class PostModel
 
     public function updatePost($postId, $title, $text, $tags, $techs) 
     {
-        // Archive the posts before updating
-        $this->archivePost($postId);
+        // Archive the post before editing 
+        $this->archivePostEdit($postId);
 
         // Update the post
         $stmt = $this->db->prepare("UPDATE post SET title = ?, text = ?, date_modified = NOW() WHERE id = ?");
@@ -140,12 +140,33 @@ class PostModel
         $this->db->prepare("UPDATE post SET is_deleted = 1 WHERE id = ?")->execute([$postId]);
     }
 
+    public function nukePost ($postId)
+    {
+        $stmt = $this->db->prepare("DELETE FROM post_tag WHERE id_post = ?");
+        $stmt->execute([$postId]);
+
+        $stmt = $this->db->prepare("DELETE FROM post_tech WHERE id_post = ?");
+        $stmt->execute([$postId]);
+
+        $stmt = $this->db->prepare("DELETE FROM post_like WHERE id_post = ?");
+        $stmt->execute([$postId]);
+
+        $stmt = $this->db->prepare("DELETE FROM post_replies WHERE id_post = ?");
+        $stmt->execute([$postId]);
+
+        $stmt = $this->db->prepare("DELETE FROM post_comment WHERE id_post = ?");
+        $stmt->execute([$postId]);
+
+        $stmt = $this->db->prepare("DELETE FROM post WHERE id = ?");
+        $stmt->execute([$postId]);
+    }
+
     public function restorePost($postId) 
     {    
         $this->db->prepare("UPDATE post SET is_deleted = 0 WHERE id = ?")->execute([$postId]);
     }
 
-    public function archivePost($postId)
+    public function archivePostEdit($postId)
     {
         $postImagePath = "uploads/posts/{$postId}/post.jpg";
         if (file_exists($postImagePath)) {
