@@ -620,7 +620,7 @@ button:hover:not(.like-btn) {
     width: 100%;
 }
 
-.success-message {
+.success-message, .success-msg {
     color: #28a745;
     text-align: center;
     padding: 10px;

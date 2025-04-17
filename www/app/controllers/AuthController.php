@@ -238,7 +238,7 @@ class AuthController
         $this->userModel->storeResetCode($user['id'], $code);
 
         if (EmailUtil::sendPasswordResetEmail($user['email'], $user['name'], $code)) {
-            $_SESSION['success'] = "Un code de réinitialisation a été envoyé à votre email.";
+            $_SESSION['success'] = "Un code de réinitialisation a été envoyé à votre email, veuillez vérifier vos spams.";
         } else {
             $_SESSION['error'] = "Échec de l'envoi de l'email de réinitialisation.";
         }
