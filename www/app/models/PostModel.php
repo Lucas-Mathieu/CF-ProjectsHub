@@ -168,16 +168,7 @@ class PostModel
 
     public function archivePostEdit($postId)
     {
-        $postImagePath = "uploads/posts/{$postId}/post.jpg";
-        if (file_exists($postImagePath)) {
-            $now = date('Y-m-d_H-i-s');
-            $archivePath = "uploads/archived_posts/{$postId}/{$now}.jpg";
-            if (!file_exists(dirname($archivePath))) {
-                mkdir(dirname($archivePath), 0777, true);
-            }
-            copy($postImagePath, $archivePath);
-        }
-
+        // Fetch the current post data, including date_modified
         $stmt = $this->db->prepare("SELECT id, id_user, title, text, date_created, date_modified FROM post WHERE id = ?");
         $stmt->execute([$postId]);
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -186,6 +177,21 @@ class PostModel
             throw new Exception("Post introuvable.");
         }
 
+        // Format date_modified to a filename-friendly string
+        $archiveTime = date('Y-m-d_H-i-s', strtotime($post['date_modified']));
+
+        // Check and archive the image if it exists
+        $postImagePath = "uploads/posts/{$postId}/post.jpg";
+        if (file_exists($postImagePath)) {
+            $archiveDir = "uploads/archived_posts/{$postId}";
+            if (!file_exists($archiveDir)) {
+                mkdir($archiveDir, 0777, true);
+            }
+            $archiveImagePath = "{$archiveDir}/{$archiveTime}.jpg";
+            copy($postImagePath, $archiveImagePath);
+        }
+
+        // Insert the archived post data without image_path
         $stmt = $this->db->prepare("
             INSERT INTO post_archive (id_post, id_user, title, text, date_created, date_modified)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -198,6 +204,15 @@ class PostModel
             $post['date_created'],
             $post['date_modified']
         ]);
+    }
+
+    public function getPostArchives($postId)
+    {
+        $stmt = $this->db->prepare("
+            SELECT * FROM post_archive WHERE id_post = ? ORDER BY date_modified ASC
+        ");
+        $stmt->execute([$postId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function searchPosts($search = '', $tags = [], $techs = [], $sort = 'created_desc')

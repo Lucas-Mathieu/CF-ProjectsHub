@@ -387,5 +387,41 @@ class PostController
         header("Location: /post/{$reply['id_post']}");
         exit;
     }
+
+    public function showPostHistory($postId)
+    {
+        $post = $this->postModel->getPostById($postId);
+        if (!$post || $_SESSION['user']['is_admin'] != 1) {
+            $_SESSION['error'] = "Action non autorisée ou post introuvable.";
+            header('Location: /posts');
+            exit;
+        }
+    
+        // Fetch archived versions
+        $archives = $this->postModel->getPostArchives($postId);
+    
+        // Prepare the current version
+        $currentVersion = [
+            'id' => null, // Indicates it's the current version
+            'title' => $post['title'],
+            'text' => $post['text'],
+            'date_created' => $post['date_created'],
+            'date_modified' => $post['date_modified'],
+            'image_path' => file_exists("uploads/posts/{$postId}/post.jpg") ? "uploads/posts/{$postId}/post.jpg" : null,
+        ];
+    
+        // Add image paths to archived versions dynamically
+        foreach ($archives as &$archive) {
+            $archiveTime = date('Y-m-d_H-i-s', strtotime($archive['date_modified']));
+            $archiveImagePath = "uploads/archived_posts/{$postId}/{$archiveTime}.jpg";
+            $archive['image_path'] = file_exists($archiveImagePath) ? $archiveImagePath : null;
+        }
+    
+        // Combine archives and current version
+        $versions = array_merge($archives, [$currentVersion]);
+    
+        // Pass data to the view
+        require_once '../app/views/posts/history.php';
+    }
 }
 ?>

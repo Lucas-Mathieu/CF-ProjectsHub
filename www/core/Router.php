@@ -214,6 +214,12 @@ switch (true) {
         $postController->deleteReply($replyId);
         break;
 
+    // Show post history
+    case preg_match('#^/post-history/(\d+)$#', $uri, $matches):
+        $postId = $matches[1];
+        $postController->showPostHistory($postId);
+        break;
+
     // Fallback 404
     default:
         http_response_code(404);

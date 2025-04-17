@@ -537,6 +537,62 @@ button:hover:not(.like-btn) {
     background: #0056b3;
 }
 
+/* HISTORY PAGE */
+.history-section {
+    padding: 30px;
+}
+
+.history-title {
+    font-size: 2rem;
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.no-versions {
+    font-size: 1rem;
+    color: #555;
+    text-align: center;
+    padding: 20px;
+    background-color: #f1f3f5;
+    border-radius: 8px;
+}
+
+.version-card {
+    background-color: #f1f3f5;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.version-title {
+    font-size: 1.5rem;
+    color: #007bff;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.current-version {
+    font-size: 0.85rem;
+    color: #28a745; /* Green to indicate current version */
+    font-weight: bold;
+}
+
+.version-meta {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.version-divider {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+}
+
 /* AUTH */
 .auth-container, .account-container {
     max-width: 500px;
