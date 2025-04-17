@@ -21,7 +21,7 @@
     <form method="GET" action="/posts" class="search-filter-form">
         <div class="search-bar">
             <label for="search">Rechercher :</label>
-            <input type="text" id="search" name="search" placeholder="Mots-clés dans titre ou texte" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+            <input type="text" id="search" name="search" placeholder="Auteur ou contenu de post" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
         </div>
 
         <div class="filters">
@@ -90,16 +90,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php
-                        $limit = !empty($post['image']) ? 150 : 800;
-                        $text = $post['text'];
-                        $isTruncated = mb_strlen($text) > $limit;
-
-                        if ($isTruncated) {
-                            $text = mb_substr($text, 0, $limit) . '... Voir plus';
-                        }
-                        echo '<p>' . nl2br(htmlspecialchars($text)) . '</p>';
-                    ?>
+                    <div class="post-text"><?= nl2br(htmlspecialchars($post['text'])) ?></div>
 
                     <button class="like-btn" data-post-id="<?= $post['id'] ?>" aria-label="Like post">
                         <i class="fa <?= $post['liked'] ? 'fa-heart' : 'fa-heart-o' ?>" style="color: <?= $post['liked'] ? 'red' : 'gray' ?>"></i>
@@ -115,31 +106,48 @@
 
 <script src='/assets/js/ajax_like.js'></script>
 <script>
-    // Gestion des boutons de bascule pour les filtres
-    document.querySelectorAll('.toggle-filter-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const targetId = button.getAttribute('data-target');
-            const target = document.getElementById(targetId);
-            const isHidden = target.style.display === 'none' || !target.style.display;
+// Gestion des boutons de bascule pour les filtres
+document.querySelectorAll('.toggle-filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        const isHidden = target.style.display === 'none' || !target.style.display;
 
-            // Masquer tous les autres filtres
-            document.querySelectorAll('.filter-options').forEach(opt => {
-                opt.style.display = 'none';
-            });
-
-            // Afficher ou masquer le filtre ciblé
-            target.style.display = isHidden ? 'flex' : 'none';
+        // Masquer tous les autres filtres
+        document.querySelectorAll('.filter-options').forEach(opt => {
+            opt.style.display = 'none';
         });
-    });
 
-    // Fermer les filtres si on clique en dehors
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.filter-group') && !e.target.closest('.toggle-filter-btn')) {
-            document.querySelectorAll('.filter-options').forEach(opt => {
-                opt.style.display = 'none';
-            });
+        // Afficher ou masquer le filtre ciblé
+        target.style.display = isHidden ? 'flex' : 'none';
+    });
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.filter-group') && !e.target.closest('.toggle-filter-btn')) {
+        document.querySelectorAll('.filter-options').forEach(opt => {
+            opt.style.display = 'none';
+        });
+    }
+});
+
+// Detect text overflow and add 'overflow' class
+document.querySelectorAll('.post-text').forEach(textDiv => {
+    const isOverflowing = textDiv.scrollHeight > textDiv.clientHeight;
+    if (isOverflowing) {
+        textDiv.classList.add('overflow');
+    }
+});
+
+// Make post cards clickable
+document.querySelectorAll('.post-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+        // Avoid triggering navigation when clicking the like button
+        if (!e.target.closest('.like-btn')) {
+            window.location.href = card.getAttribute('data-href');
         }
     });
+});
 </script>
 
 <?php require_once '../app/views/partials/footer.php'; ?>

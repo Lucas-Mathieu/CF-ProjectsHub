@@ -135,7 +135,7 @@ class UserModel
     // Verify user
     public function verifyUser($id)
     {
-        $stmt = $this->db->prepare('UPDATE user SET is_verified = 1 WHERE id = ?');
+        $stmt = $this->db->prepare('UPDATE user SET is_verified = 1, verification_code = NULL WHERE id = ?');
         $stmt->execute([$id]);
     }
 
@@ -157,6 +157,45 @@ class UserModel
     public function removeAdmin($id)
     {
         $stmt = $this->db->prepare('UPDATE user SET is_admin = 0 WHERE id = ?');
+        $stmt->execute([$id]);
+    }
+
+    // Store verification code
+    public function storeVerificationCode($id, $code)
+    {
+        $stmt = $this->db->prepare('UPDATE user SET verification_code = ? WHERE id = ?');
+        $stmt->execute([$code, $id]);
+    }
+
+    // Verify code
+    public function verifyCode($id, $code)
+    {
+        $stmt = $this->db->prepare('SELECT verification_code FROM user WHERE id = ?');
+        $stmt->execute([$id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user && $user['verification_code'] === $code;
+    }
+
+    // Store password reset code
+    public function storeResetCode($id, $code)
+    {
+        $stmt = $this->db->prepare('UPDATE user SET reset_code = ? WHERE id = ?');
+        $stmt->execute([$code, $id]);
+    }
+
+    // Verify reset code
+    public function verifyResetCode($id, $code)
+    {
+        $stmt = $this->db->prepare('SELECT reset_code FROM user WHERE id = ?');
+        $stmt->execute([$id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user && $user['reset_code'] === $code;
+    }
+
+    // Clear reset code
+    public function clearResetCode($id)
+    {
+        $stmt = $this->db->prepare('UPDATE user SET reset_code = NULL WHERE id = ?');
         $stmt->execute([$id]);
     }
 }

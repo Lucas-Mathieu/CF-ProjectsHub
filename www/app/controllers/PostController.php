@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../../core/EmailUtil.php';
+
 class PostController
 {
     private $postModel;
@@ -17,12 +19,6 @@ class PostController
 
     public function showPostsList($archive)
     {
-        if ($archive === 1 && $_SESSION['user']['is_admin'] != 1) {
-            $_SESSION['error'] = "Action non autorisée.";
-            header('Location: /posts');
-            exit;
-        }
-
         $search = $_GET['search'] ?? '';
         $tags = $_GET['tags'] ?? [];
         $techs = $_GET['techs'] ?? [];
@@ -31,7 +27,7 @@ class PostController
         $tags = $this->tagModel->getAllTags();
         $techs = $this->techModel->getAllTechs();
 
-        $posts = $this->postModel->searchPosts($search, $_GET['tags'] ?? [], $_GET['techs'] ?? [], $sort);
+        $posts = $this->postModel->searchPosts($search, $_GET['tags'] ?? [], $_GET['techs'] ?? [], $sort, $archive);
         $userId = $_SESSION['user']['id'] ?? null;
 
         $baseUrl = "http://localhost/";

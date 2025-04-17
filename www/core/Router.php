@@ -24,6 +24,17 @@ $authController = new AuthController($userModel);
 $postController = new PostController($postModel, $commentModel, $tagModel, $techModel);
 $userController = new UserController($userModel);
 
+if (isset($_SESSION['user'])) {
+    // Check if the user is verified or admin on every page load
+    $user = $userModel->getUserById($_SESSION['user']['id']);
+    if ($user) {
+        $_SESSION['user']['is_verified'] = $user['is_verified'];
+        $_SESSION['user']['is_admin'] = $user['is_admin'];
+    } else {
+        unset($_SESSION['user']);
+    }
+}
+
 // Get the URI and HTTP method
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
@@ -218,6 +229,25 @@ switch (true) {
     case preg_match('#^/post-history/(\d+)$#', $uri, $matches):
         $postId = $matches[1];
         $postController->showPostHistory($postId);
+        break;
+
+    // Send verification email
+    case $uri === '/send-verification-email' && $method === 'POST':
+        $authController->sendVerificationEmail();
+        break;
+
+    // Verify email code
+    case $uri === '/verify-email' && $method === 'POST':
+        $authController->verifyEmailCode();
+        break;
+
+    // Handle password reset
+    case $uri === '/reset-password' && $method === 'POST':
+        if (isset($_POST['send_code'])) {
+            $authController->sendPasswordResetEmail();
+        } else {
+            $authController->resetPassword();
+        }
         break;
 
     // Fallback 404

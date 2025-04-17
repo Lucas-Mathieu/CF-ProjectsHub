@@ -215,7 +215,7 @@ class PostModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function searchPosts($search = '', $tags = [], $techs = [], $sort = 'created_desc')
+    public function searchPosts($search = '', $tags = [], $techs = [], $sort = 'created_desc', $archive)    
     {
         $query = "
             SELECT DISTINCT p.*, u.name AS author_name 
@@ -223,13 +223,14 @@ class PostModel
             JOIN user u ON p.id_user = u.id 
             LEFT JOIN post_tag pt ON p.id = pt.id_post 
             LEFT JOIN post_tech ptech ON p.id = ptech.id_post 
+            WHERE p.is_deleted = :archive
         ";
-        
-        $params = [];
+
+        $params = [':archive' => $archive ? 1 : 0];
 
         // Key words
         if (!empty($search)) {
-            $query .= " AND (p.title LIKE :search OR p.text LIKE :search)";
+            $query .= " AND (u.name LIKE :search OR p.title LIKE :search OR p.text LIKE :search)";
             $params['search'] = "%$search%";
         }
 
