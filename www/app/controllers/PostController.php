@@ -17,7 +17,7 @@ class PostController
         $this->techModel = $techModel;
     }
 
-    public function showPostsList($archive)
+public function showPostsList($archive)
     {
         $search = $_GET['search'] ?? '';
         $tags = $_GET['tags'] ?? [];
@@ -29,8 +29,6 @@ class PostController
 
         $posts = $this->postModel->searchPosts($search, $_GET['tags'] ?? [], $_GET['techs'] ?? [], $sort, $archive);
         $userId = $_SESSION['user']['id'] ?? null;
-
-        $baseUrl = "http://localhost/";
 
         $updatedPosts = [];
 
@@ -44,15 +42,15 @@ class PostController
             $post['tags'] = $this->tagModel->getTagsByPostId($postId);
 
             // User pfp
-            $pfpPath = "uploads/pfps/{$postUserId}/avatar.jpg";
-            if (!file_exists($pfpPath)) {
-                $pfpPath = "uploads/pfps/0/avatar.jpg";
+            $pfpPath = "/uploads/pfps/{$postUserId}/avatar.jpg";
+            if (!file_exists(__DIR__ . "/../../www{$pfpPath}")) {
+                $pfpPath = "/uploads/pfps/0/avatar.jpg";
             }
-            $post['author_pfp'] = $baseUrl . $pfpPath;
+            $post['author_pfp'] = $pfpPath;
 
             // Post image
-            $postImagePath = "uploads/posts/{$postId}/post.jpg";
-            $post['image'] = file_exists($postImagePath) ? $baseUrl . $postImagePath : null;
+            $postImagePath = "/uploads/posts/{$postId}/post.jpg";
+            $post['image'] = file_exists(__DIR__ . "/../../www{$postImagePath}") ? $postImagePath : null;
 
             // Check user like
             $liked = false;
@@ -81,8 +79,6 @@ class PostController
     {
         $post = $this->postModel->getPostById($postId);
 
-        $baseUrl = "http://localhost/";
-
         if (!$post) {
             $_SESSION['error'] = "Post not found.";
             header('Location: /posts');
@@ -107,15 +103,15 @@ class PostController
         $userId = $_SESSION['user']['id'] ?? null; // Get the logged-in user ID
 
         // Get author's profile picture
-        $pfpPath = "uploads/pfps/{$post['id_user']}/avatar.jpg";
-        if (!file_exists($pfpPath)) {
-            $pfpPath = "uploads/pfps/0/avatar.jpg";
+        $pfpPath = "/uploads/pfps/{$post['id_user']}/avatar.jpg";
+        if (!file_exists(__DIR__ . "/../../www{$pfpPath}")) {
+            $pfpPath = "/uploads/pfps/0/avatar.jpg";
         }
-        $post['author_pfp'] = $baseUrl . $pfpPath;
+        $post['author_pfp'] = $pfpPath;
     
         // Get post image
-        $postImagePath = "uploads/posts/{$postId}/post.jpg";
-        $post['image'] = file_exists($postImagePath) ? $baseUrl . $postImagePath : null;
+        $postImagePath = "/uploads/posts/{$postId}/post.jpg";
+        $post['image'] = file_exists(__DIR__ . "/../../www{$postImagePath}") ? $postImagePath : null;
     
         // Check if the logged-in user has liked the post
         $liked = false;
@@ -141,11 +137,11 @@ class PostController
             $commentUserId = $comment['id_user'];
     
             // Commenter's pfp
-            $commentPfpPath = "uploads/pfps/{$commentUserId}/avatar.jpg";
-            if (!file_exists($commentPfpPath)) {
-                $commentPfpPath = "uploads/pfps/0/avatar.jpg";
+            $commentPfpPath = "/uploads/pfps/{$commentUserId}/avatar.jpg";
+            if (!file_exists(__DIR__ . "/../../www{$commentPfpPath}")) {
+                $commentPfpPath = "/uploads/pfps/0/avatar.jpg";
             }
-            $comment['commenter_pfp'] = $baseUrl . $commentPfpPath;
+            $comment['commenter_pfp'] = $commentPfpPath;
             
             $updatedComments[] = $comment; // Add updated comment
         }

@@ -36,9 +36,9 @@ class AuthController
         $user = $this->userModel->getUserByEmail($email);
 
         if ($user && password_verify($password, $user['password'])) {
-            $pfpPath = "Uploads/pfps/{$user['id']}/avatar.jpg";
+            $pfpPath = "uploads/pfps/{$user['id']}/avatar.jpg";
             if (!file_exists($pfpPath)) {
-                $pfpPath = "Uploads/pfps/0/avatar.jpg";
+                $pfpPath = "uploads/pfps/0/avatar.jpg";
             }
 
             $_SESSION['user'] = [
@@ -109,7 +109,7 @@ class AuthController
         $user = $this->userModel->getUserByEmail($email);
 
         if ($user && password_verify($password, $user['password'])) {
-            $pfpPath = "Uploads/pfps/0/avatar.jpg";
+            $pfpPath = "uploads/pfps/0/avatar.jpg";
 
             $_SESSION['user'] = [
                 'id' => $user['id'],

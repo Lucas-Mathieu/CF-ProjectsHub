@@ -15,6 +15,13 @@
                         <a href="/edit-post/<?= $post['id'] ?>" class="btn btn-primary">Modifier</a>
                     <?php endif; ?>
 
+                    <?php if (!$_SESSION['user']['is_admin'] && $_SESSION['user']['id'] === $post['id_user']): ?>
+                        <form action="/delete-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver ce post ?');" style="display: inline;">
+                            <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                            <button type="submit" class="btn btn-red">Archiver</button>
+                        </form>
+                    <?php endif; ?>
+
                     <?php if ($_SESSION['user']['is_admin']): ?>
                         <a href="/post-history/<?= $post['id'] ?>" class="btn btn-primary">Historique</a>
                         <?php if ($post['is_deleted']): ?>
