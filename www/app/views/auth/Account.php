@@ -13,14 +13,12 @@
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
+        <p class="user-email">Email: <?= htmlspecialchars($user['email']) ?></p>
+
         <form action="/account" method="POST" class="account-form">
             <label for="name">Nom:</label>
             <input type="text" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" required class="form-input">
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required class="form-input">
-
-            <input type="submit" value="Mettre a jour" class="btn btn-primary">
+            <input type="submit" value="Mettre à jour" class="btn btn-primary">
         </form>
 
         <div class="pfp">

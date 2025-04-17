@@ -225,7 +225,7 @@ nav ul li a:hover {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
-    width: 100%; /* Ensure full width usage */
+    width: 100%;
 }
 
 .posts-title {
@@ -238,7 +238,7 @@ nav ul li a:hover {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
-    width: 100%; /* Ensure grid uses full container width */
+    width: 100%;
 }
 
 .post-card {
@@ -252,7 +252,7 @@ nav ul li a:hover {
     flex-direction: column;
     text-decoration: none;
     color: inherit;
-    height: 600px; /* Fixed height for all post cards */
+    height: 600px;
     overflow: hidden;
 }
 
@@ -317,7 +317,7 @@ nav ul li a:hover {
 }
 
 .post-text {
-    flex: 1; /* Grow to fill available space */
+    flex: 1;
     font-size: 0.95rem;
     color: #333;
     overflow: hidden;
@@ -325,7 +325,7 @@ nav ul li a:hover {
     line-height: 1.5;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 10; /* Limit to 10 lines, adjustable */
+    -webkit-line-clamp: 10;
     margin-bottom: 10px;
 }
 
@@ -342,7 +342,7 @@ nav ul li a:hover {
 }
 
 .post-text.overflow::after {
-    display: block; /* Show 'Voir plus...' only when text overflows */
+    display: block;
 }
 
 .like-btn {
@@ -364,7 +364,6 @@ nav ul li a:hover {
 
 .like-btn:hover i {
     transform: scale(1.1);
-    background-color: transparent !important;
 }
 
 .like-btn i.fa-heart {
@@ -373,14 +372,6 @@ nav ul li a:hover {
 
 .like-btn i.fa-heart-o {
     color: gray;
-}
-
-.like-btn i {
-    transition: transform 0.2s ease, color 0.3s ease;
-}
-
-.like-btn i.fa-heart, .like-btn i.fa-heart-o {
-    transition: color 0.3s ease;
 }
 
 .like-count {
@@ -404,9 +395,9 @@ nav ul li a:hover {
 }
 
 .post-tags-techs {
-    margin-top: 10px;
-    margin-bottom: 15px;
+    margin: 10px 0 15px;
 }
+
 .tag-badge,
 .tech-badge {
     display: inline-block;
@@ -418,28 +409,9 @@ nav ul li a:hover {
     margin-bottom: 10px;
     font-size: 0.85rem;
 }
+
 .tech-badge {
     background-color: #d0f0ff;
-}
-
-.post-author {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.author-pfp {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #007bff;
-}
-
-.post-meta {
-    font-size: 0.9rem;
-    color: #555;
 }
 
 .post-detail h1 {
@@ -455,15 +427,7 @@ nav ul li a:hover {
     border-radius: 8px;
 }
 
-.post-text {
-    font-size: 1rem;
-    color: #333;
-    margin-top: 20px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* comments */
+/* COMMENTS */
 .comments-list {
     list-style: none;
     margin-top: 20px;
@@ -509,7 +473,6 @@ nav ul li a:hover {
     margin-top: 10px;
 }
 
-/* Replies */
 .comment-replies {
     list-style: none;
     margin-top: 10px;
@@ -537,20 +500,26 @@ nav ul li a:hover {
 .comment-form, .reply-form {
     margin-top: 1em;
 }
+
 textarea {
     width: 100%;
     min-height: 60px;
     margin-bottom: 0.5em;
     resize: vertical;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
 }
+
 button {
-    background: #007BFF;
+    background: #007bff;
     color: white;
     border: none;
     padding: 0.5em 1em;
     border-radius: 4px;
     cursor: pointer;
 }
+
 button:hover:not(.like-btn) {
     background: #0056b3;
 }
@@ -595,7 +564,7 @@ button:hover:not(.like-btn) {
 
 .current-version {
     font-size: 0.85rem;
-    color: #28a745; /* Green to indicate current version */
+    color: #28a745;
     font-weight: bold;
 }
 
@@ -611,7 +580,7 @@ button:hover:not(.like-btn) {
     margin: 20px 0;
 }
 
-/* AUTH */
+/* AUTH AND ACCOUNT */
 .auth-container, .account-container {
     max-width: 500px;
     margin: 60px auto;
@@ -626,11 +595,18 @@ button:hover:not(.like-btn) {
     margin-bottom: 30px;
 }
 
-.auth-form, .account-form {
+.auth-form, .account-form, .verification-form, .verify-code-form, .upload-pfp-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.user-email {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .form-input {
@@ -638,6 +614,29 @@ button:hover:not(.like-btn) {
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 6px;
+    width: 100%;
+}
+
+.success-message {
+    color: #28a745;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.error-message, .error-msg {
+    color: #dc3545;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.verified-message {
+    color: #28a745;
+    text-align: center;
+    margin: 20px 0;
 }
 
 .account-actions {
@@ -653,7 +652,7 @@ button:hover:not(.like-btn) {
     text-decoration: none;
     font-weight: bold;
     text-align: center;
-    transition: 0.3s;
+    transition: background-color 0.3s;
     border: none;
     cursor: pointer;
 }
@@ -673,23 +672,22 @@ button:hover:not(.like-btn) {
 }
 
 .btn-red:hover {
-    background-color: #c82333 !important;
+    background-color: #c82333;
 }
 
-.btn-red-outline {
-    background-color: transparent;
-    color: #dc3545;
-    border: 2px solid #dc3545;
-}
-
-.btn-red-outline:hover {
-    background-color: #dc3545;
+.btn-secondary {
+    background-color: #6c757d;
     color: white;
+    margin-top: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
 }
 
 .pfp {
     text-align: center;
-    margin-top: 30px;
+    margin: 30px 0;
 }
 
 .profile-image {
@@ -702,76 +700,13 @@ button:hover:not(.like-btn) {
     transition: transform 0.3s;
 }
 
-.auth-alt-link, .error-msg {
+.auth-alt-link {
     text-align: center;
-}
-
-.error-msg {
-    color: red;
-    font-weight: bold;
-}
-
-.password-strength {
-    margin: 15px 0;
-    width: 100%;
-}
-
-.strength-bar {
-    height: 12px;
-    background-color: #f1f3f5;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
-}
-
-.strength-bar::after {
-    content: '';
-    display: block;
-    height: 100%;
-    width: 0;
-    background-color: #e0e0e0;
-    transition: width 0.4s ease, background-color 0.4s ease;
-}
-
-.strength-bar.weak::after {
-    width: 33%;
-    background-color: #dc3545; /* Red, matching .btn-red */
-}
-
-.strength-bar.medium::after {
-    width: 66%;
-    background-color: #ffc107; /* Yellow, for medium strength */
-}
-
-.strength-bar.strong::after {
-    width: 100%;
-    background-color: #007bff; /* Blue, matching .btn-primary */
-}
-
-.strength-text {
-    font-size: 0.85rem;
-    color: #555;
-    margin-top: 8px;
-    text-align: left;
+    margin: 10px 0;
 }
 
 /* CREATE POST */
-.tag {
-    margin-bottom: 10px;
-}
-
-.option-group-search {
-    z-index: 1000;
-    display: flex;
-    position: absolute;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.option-group {
+.option-group-search, .option-group {
     z-index: 1000;
     display: flex;
     flex-wrap: wrap;
@@ -818,27 +753,25 @@ footer a:hover {
     color: #fff;
 }
 
-/* General mobile adjustments */
+/* MOBILE ADJUSTMENTS */
 @media (max-width: 480px) {
-    /* Reduce overall padding and margins for smaller screens */
     .posts-container {
         padding: 0 10px;
         margin: 20px auto;
     }
 
-    /* Header adjustments */
     header {
         padding: 10px 15px;
     }
 
     .logo a {
-        font-size: 1.2rem; /* Smaller logo text */
+        font-size: 1.2rem;
     }
 
     .mobile-menu {
         top: 50px;
         right: 15px;
-        width: 180px; /* Smaller menu width */
+        width: 180px;
         padding: 10px;
     }
 
@@ -847,14 +780,13 @@ footer a:hover {
         font-size: 0.9rem;
     }
 
-    /* Post Card */
     .post-card {
-        height: 500px; /* Slightly shorter for mobile to fit screen */
+        height: 500px;
         padding: 15px;
     }
 
     .post-author {
-        flex-direction: column; /* Stack author info vertically */
+        flex-direction: column;
         align-items: flex-start;
         gap: 8px;
         margin-bottom: 8px;
@@ -888,7 +820,7 @@ footer a:hover {
 
     .post-text {
         font-size: 0.9rem;
-        -webkit-line-clamp: 8; /* Fewer lines for mobile */
+        -webkit-line-clamp: 8;
     }
 
     .post-text::after {
@@ -907,7 +839,6 @@ footer a:hover {
         font-size: 0.8rem;
     }
 
-    /* Search and Filter Form */
     .search-filter-form {
         padding: 10px;
     }
@@ -926,10 +857,6 @@ footer a:hover {
         text-align: center;
     }
 
-    .filter-options {
-        width: 80vh;
-    }
-
     .sort-group select {
         width: 100%;
     }
@@ -939,7 +866,6 @@ footer a:hover {
         text-align: center;
     }
 
-    /* Other elements */
     .posts-title {
         font-size: 1.5rem;
         margin-bottom: 20px;
@@ -950,20 +876,50 @@ footer a:hover {
         font-size: 0.9rem;
     }
 
-    .error-msg {
+    .auth-container, .account-container {
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .user-email {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .success-message, .error-message, .verified-message {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .account-form, .verification-form, .verify-code-form, .upload-pfp-form {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .account-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 8px;
         font-size: 0.9rem;
     }
 
-    /* Increase touch target size */
-    .btn, .like-btn, .toggle-filter-btn, .filter-btn {
-        touch-action: manipulation; /* Improve touch responsiveness */
+    .pfp {
+        margin: 20px 0;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
     }
 }
 
-/* Adjustments for tablets and larger phones (up to 768px) */
 @media (max-width: 768px) {
     .posts-grid {
-        grid-template-columns: 1fr; /* Single column for posts */
+        grid-template-columns: 1fr;
     }
 
     .post-card {

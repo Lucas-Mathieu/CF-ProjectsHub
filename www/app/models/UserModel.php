@@ -35,10 +35,10 @@ class UserModel
     }
 
     // Update user profile
-    public function updateUserProfile($id, $name, $email)
+    public function updateUserProfile($id, $name)
     {
-        $stmt = $this->db->prepare('UPDATE user SET name = ?, email = ? WHERE id = ?');
-        $stmt->execute([$name, $email, $id]);
+        $stmt = $this->db->prepare('UPDATE user SET name = ? WHERE id = ?');
+        $stmt->execute([$name, $id]);
     }
 
     // Change user password

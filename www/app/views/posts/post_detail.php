@@ -12,15 +12,15 @@
             <?php if (!empty($_SESSION['user']) && ($_SESSION['user']['id'] === $post['id_user'] || $_SESSION['user']['is_admin'])): ?>
                 <div class="post-actions">
                     <?php if ($_SESSION['user']['id'] === $post['id_user']): ?>
-                        <a href="/edit-post/<?= $post['id'] ?>" class="btn btn-secondary">Modifier</a>
+                        <a href="/edit-post/<?= $post['id'] ?>" class="btn btn-primary">Modifier</a>
                     <?php endif; ?>
 
                     <?php if ($_SESSION['user']['is_admin']): ?>
-                        <a href="/post-history/<?= $post['id'] ?>" class="btn btn-secondary">Historique</a>
+                        <a href="/post-history/<?= $post['id'] ?>" class="btn btn-primary">Historique</a>
                         <?php if ($post['is_deleted']): ?>
                             <form action="/restore-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir restaurer ce post ?');" style="display: inline;">
                                 <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                                <button type="submit" class="btn btn-secondary">Restaurer</button>
+                                <button type="submit" class="btn btn-primary">Restaurer</button>
                             </form>
 
                             <form action="/nuke-post/<?= $post['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" style="display: inline;">

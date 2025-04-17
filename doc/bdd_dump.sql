@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 11, 2025 at 11:10 AM
+-- Generation Time: Apr 17, 2025 at 11:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -34,12 +34,9 @@ CREATE TABLE `post` (
   `text` varchar(3000) NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_modified` datetime NOT NULL DEFAULT current_timestamp(),
-  `like_count` int(11) NOT NULL DEFAULT 0
+  `like_count` int(11) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `post`
---
 
 -- --------------------------------------------------------
 
@@ -71,10 +68,6 @@ CREATE TABLE `post_comment` (
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `post_comment`
---
-
 -- --------------------------------------------------------
 
 --
@@ -87,10 +80,6 @@ CREATE TABLE `post_like` (
   `id_post` int(11) NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `post_like`
---
 
 -- --------------------------------------------------------
 
@@ -107,10 +96,6 @@ CREATE TABLE `post_replies` (
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `post_replies`
---
-
 -- --------------------------------------------------------
 
 --
@@ -122,10 +107,6 @@ CREATE TABLE `post_tag` (
   `id_tag` int(11) NOT NULL,
   `id_post` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `post_tag`
---
 
 -- --------------------------------------------------------
 
@@ -150,10 +131,6 @@ CREATE TABLE `tag` (
   `name` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tag`
---
-
 -- --------------------------------------------------------
 
 --
@@ -164,10 +141,6 @@ CREATE TABLE `tech` (
   `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tech`
---
 
 -- --------------------------------------------------------
 
@@ -181,12 +154,10 @@ CREATE TABLE `user` (
   `email` varchar(320) NOT NULL,
   `password` varchar(128) NOT NULL,
   `is_verified` tinyint(1) NOT NULL DEFAULT 0,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `verification_code` varchar(6) DEFAULT NULL,
+  `reset_code` varchar(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `user`
---
 
 --
 -- Indexes for dumped tables
@@ -244,7 +215,9 @@ ALTER TABLE `post_tag`
 -- Indexes for table `post_tech`
 --
 ALTER TABLE `post_tech`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tech_FK1` (`id_tech`),
+  ADD KEY `tech_FK2` (`id_post`);
 
 --
 -- Indexes for table `tag`
@@ -274,7 +247,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_archive`
@@ -286,25 +259,25 @@ ALTER TABLE `post_archive`
 -- AUTO_INCREMENT for table `post_comment`
 --
 ALTER TABLE `post_comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_like`
 --
 ALTER TABLE `post_like`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_replies`
 --
 ALTER TABLE `post_replies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_tag`
 --
 ALTER TABLE `post_tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_tech`
@@ -316,19 +289,19 @@ ALTER TABLE `post_tech`
 -- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tech`
 --
 ALTER TABLE `tech`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -375,6 +348,13 @@ ALTER TABLE `post_replies`
 ALTER TABLE `post_tag`
   ADD CONSTRAINT `tag_FK1` FOREIGN KEY (`id_tag`) REFERENCES `tag` (`id`),
   ADD CONSTRAINT `tag_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
+
+--
+-- Constraints for table `post_tech`
+--
+ALTER TABLE `post_tech`
+  ADD CONSTRAINT `tech_FK1` FOREIGN KEY (`id_tech`) REFERENCES `tech` (`id`),
+  ADD CONSTRAINT `tech_FK2` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -210,10 +210,9 @@ class UserController
         // Check if the request method is POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
-            $email = $_POST['email'] ?? '';
 
             // Check if the fields are empty
-            if (empty($name) || empty($email)) {
+            if (empty($name)) {
                 $_SESSION['error'] = "Tous les champs doivent être remplis.";
                 header('Location: /account');
                 exit();
@@ -223,11 +222,10 @@ class UserController
             $userId = $_SESSION['user']['id'];
 
             // Update the user profile in the database
-            $this->userModel->updateUserProfile($userId, $name, $email);
+            $this->userModel->updateUserProfile($userId, $name);
 
             // Update the session with the new user data
             $_SESSION['user']['name'] = $name;
-            $_SESSION['user']['email'] = $email;
 
             // Redirect to the account page with a success message
             $_SESSION['success'] = "Profil mis à jour avec succès.";
