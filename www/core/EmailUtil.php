@@ -6,7 +6,7 @@ class EmailUtil
     {
         $subject = "Vérifiez votre compte";
         $message = "Bonjour $name,\n\nVoici votre code de vérification : $code\n\nMerci de vérifier votre compte.\n\nCordialement,\nCF Project Hub";
-        $headers = "From: no-reply@cf-projecthub.alwaysdata.net\r\n";
+        $headers = "From: no-reply@votre-nom-de-domaine\r\n";
         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
         // Encode subject for UTF-8
@@ -19,7 +19,7 @@ class EmailUtil
     {
         $subject = "Réinitialisez votre mot de passe";
         $message = "Bonjour $name,\n\nVoici votre code de réinitialisation : $code\n\nMerci de réinitialiser votre mot de passe.\n\nCordialement,\nCF Project Hub";
-        $headers = "From: no-reply@cf-projecthub.alwaysdata.net\r\n";
+        $headers = "From: no-reply@votre-nom-de-domaine\r\n";
         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
         // Encode subject for UTF-8
