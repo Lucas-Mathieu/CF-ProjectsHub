@@ -22,10 +22,11 @@ Le backlog complet du projet est disponible sur Trello :
   │        ├── partials/    → Éléments réutilisables (header, footer, etc.)<br />
   │        └── posts/       → Pages relatives aux projets<br />
   ├── core/         → Fichiers de configuration et de routage<br />
-  ├── assets/       → Fichiers statiques (CSS, JS, images)<br />
-  ├── uploads/      → Répertoire des fichiers uploadés par les utilisateurs<br />
-  ├── .htaccess     → Réécriture d’URL (routing)<br />
-  └── index.php     → Point d’entrée du site (front controller)<br />
+  ├── www/          → Répertoire contenant les fichiers publics<br />
+  │   ├── assets/       → Fichiers statiques (CSS, JS, images)<br />
+  │   ├── uploads/      → Répertoire des fichiers uploadés par les utilisateurs<br />
+  │   ├── .htaccess     → Réécriture d’URL (routing)<br />
+  │   └── index.php     → Point d’entrée du site (front controller)<br /><br />
 <br />
 /doc → Documentation technique <br />
   ├── backlog.txt → Lien vers le backlog trello <br />
@@ -101,9 +102,9 @@ class EmailUtil
 ```
 <br />
 Déployer le code :<br />
-Transférez le contenu du dossier /www vers le répertoire racine de votre serveur web (par exemple, /var/www/html ou le dossier public de votre hébergeur).<br />
-Assurez-vous que le répertoire uploads/ dispose des permissions d’écriture (par exemple, chmod 755 uploads).<br />
-Configurez votre serveur web (Apache, Nginx, etc.) pour pointer vers le fichier index.php comme point d’entrée.<br /><br />
+Transférez le contenu du dossier /www vers le répertoire racine de votre serveur web.<br />
+Assurez-vous que le répertoire www/uploads/ dispose des permissions d’écriture (par exemple, chmod 755 uploads).<br />
+Configurez votre serveur web (Apache, Nginx, etc.) pour pointer vers le fichier www/index.php comme point d’entrée.<br /><br />
 Vérifier la configuration :<br />
 Accédez à votre site via un navigateur pour vérifier que la connexion à la base de données fonctionne.<br />
 Testez les fonctionnalités d’envoi d’emails (vérification de compte et réinitialisation de mot de passe) pour vous assurer que les emails sont envoyés correctement.<br /><br />
