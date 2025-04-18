@@ -33,7 +33,7 @@
 
             <a href="#" class="toggle-menu">☰</a>
 
-            <mobile class="mobile-menu">
+            <div class="mobile-menu">
                 <ul>
                     <?php if (isset($_SESSION['user'])): ?>
                         <li><a href="/posts">Posts</a></li>
@@ -48,7 +48,7 @@
                         <li><a href="/register">Créer un compte</a></li>
                     <?php endif; ?>
                 </ul>
-            </mobile>
+            </div>
         </nav>
     </header>
 

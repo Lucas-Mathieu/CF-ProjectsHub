@@ -299,6 +299,7 @@ nav ul li a:hover {
     border-radius: 12px;
     font-size: 0.85em;
     margin-right: 0.3em;
+    margin-bottom: 10px;
 }
 
 .post-image-wrapper {
@@ -329,7 +330,7 @@ nav ul li a:hover {
     -webkit-line-clamp: 10;
     line-clamp: 10;
     margin-bottom: 10px;
-    word-wrap: break-word; /* Ensure text wraps to next line */
+    word-wrap: break-word;
     overflow-wrap: break-word;
 }
 

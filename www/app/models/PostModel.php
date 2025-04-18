@@ -157,6 +157,9 @@ class PostModel
         $stmt = $this->db->prepare("DELETE FROM post_comment WHERE id_post = ?");
         $stmt->execute([$postId]);
 
+        $stmt = $this->db->prepare("DELETE FROM post_archive WHERE id_post = ?");
+        $stmt->execute([$postId]);
+
         $stmt = $this->db->prepare("DELETE FROM post WHERE id = ?");
         $stmt->execute([$postId]);
     }
