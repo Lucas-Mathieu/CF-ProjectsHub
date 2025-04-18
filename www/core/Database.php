@@ -9,9 +9,9 @@ class Database
         if (self::$instance === null) {
             try {
                 self::$instance = new PDO(
-                    'mysql:host=localhost;dbname=projecthub;charset=utf8mb4',
-                    'root',
-                    ''
+                    'mysql:host=localhost;dbname=cf-projecthub_db;charset=utf8mb4',
+                    'user',
+                    'password'
                 );
                 self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
