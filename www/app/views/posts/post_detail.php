@@ -71,7 +71,7 @@
             </div>
         <?php endif; ?>
 
-        <div class="post-text">
+        <div class="post-text, post-text-detail">
             <?= nl2br(htmlspecialchars($post['text'])) ?>
         </div>
 

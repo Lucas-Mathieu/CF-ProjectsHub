@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `post` (
   `id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
-  `title` varchar(30) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `text` varchar(3000) NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_modified` datetime NOT NULL DEFAULT current_timestamp(),
@@ -48,7 +48,7 @@ CREATE TABLE `post_archive` (
   `id` int(11) NOT NULL,
   `id_post` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
-  `title` varchar(30) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `text` varchar(3000) NOT NULL,
   `date_created` datetime NOT NULL,
   `date_modified` datetime NOT NULL DEFAULT current_timestamp()

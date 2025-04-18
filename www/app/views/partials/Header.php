@@ -27,7 +27,7 @@
                 <?php else: ?>
 					<li><a href="/posts">Posts</a></li>
                     <li><a href="/login">Connexion</a></li>
-                    <li><a href="/register">Creer un compte</a></li>
+                    <li><a href="/register">Créer un compte</a></li>
                 <?php endif; ?>
             </ul>
 
@@ -45,7 +45,7 @@
                     <?php else: ?>
                         <li><a href="/posts">Posts</a></li>
                         <li><a href="/login">Connexion</a></li>
-                        <li><a href="/register">Creer un compte</a></li>
+                        <li><a href="/register">Créer un compte</a></li>
                     <?php endif; ?>
                 </ul>
             </mobile>

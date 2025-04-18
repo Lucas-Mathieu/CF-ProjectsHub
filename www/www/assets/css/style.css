@@ -333,6 +333,10 @@ nav ul li a:hover {
     overflow-wrap: break-word;
 }
 
+.post-text-detail {
+    height: 100%;
+}
+
 .post-text::after {
     content: 'Voir plus...';
     position: absolute;

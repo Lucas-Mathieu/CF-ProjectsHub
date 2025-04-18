@@ -9,7 +9,7 @@ class Database
         if (self::$instance === null) {
             try {
                 self::$instance = new PDO(
-                    'mysql:host=localhost;dbname=projecthub;charset=utf8',
+                    'mysql:host=localhost;dbname=projecthub;charset=utf8mb4',
                     'root',
                     ''
                 );

@@ -9,9 +9,9 @@
     <?php endif; ?>
 
     <form action="/update-post/<?php echo $post['id']; ?>" method="POST" enctype="multipart/form-data" class="auth-form">
-        <input type="text" name="title" id="title" maxlength="30" placeholder="Titre du post" class="form-input" value="<?php echo htmlspecialchars($post['title']); ?>" required>
+        <input type="text" lang="fr" name="title" id="title" maxlength="100" placeholder="Titre du post" class="form-input" value="<?php echo htmlspecialchars($post['title']); ?>" required>
 
-        <textarea name="content" id="content" placeholder="Contenu du post" class="form-input" rows="5" required><?php echo htmlspecialchars($post['text']); ?></textarea>
+        <textarea name="content" lang="fr" id="content" placeholder="Contenu du post" class="form-input" rows="5" required><?php echo htmlspecialchars($post['text']); ?></textarea>
 
         <input type="file" name="image" id="image" accept="image/*" class="form-input">
 

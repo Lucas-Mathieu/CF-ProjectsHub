@@ -18,7 +18,7 @@
                             <img src="/<?= htmlspecialchars($version['image_path']) ?>" alt="Image de la version" class="post-image-full" />
                         </div>
                     <?php endif; ?>
-                    <div class="post-text"><?= nl2br(htmlspecialchars($version['text'])) ?></div>
+                    <div class="post-text, post-text-detail"><?= nl2br(htmlspecialchars($version['text'])) ?></div>
                 </article>
                 <hr class="version-divider">
             <?php endforeach; ?>

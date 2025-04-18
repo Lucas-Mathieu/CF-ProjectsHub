@@ -9,9 +9,9 @@
     <?php endif; ?>
 
     <form action="/create-post" method="POST" enctype="multipart/form-data" class="auth-form">
-        <input type="text" name="title" id="title" maxlength="30" placeholder="Titre du post" class="form-input" required>
+        <input type="text" lang="fr" name="title" id="title" maxlength="100" placeholder="Titre du post" class="form-input" required>
 
-        <textarea name="content" id="content" placeholder="Contenu du post" class="form-input" rows="5" required></textarea>
+        <textarea name="content" lang="fr" id="content" placeholder="Contenu du post" class="form-input" rows="5" required></textarea>
 
         <input type="file" name="image" id="image" accept="image/*" class="form-input">
 
