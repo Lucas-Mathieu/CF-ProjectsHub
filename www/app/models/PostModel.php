@@ -215,7 +215,7 @@ class PostModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function searchPosts($search = '', $tags = [], $techs = [], $sort = 'created_desc', $archive)    
+    public function searchPosts($search = '', $tags = [], $techs = [], $sort = 'created_desc', $archive)
     {
         $query = "
             SELECT DISTINCT p.*, u.name AS author_name 
@@ -231,23 +231,31 @@ class PostModel
         // Key words
         if (!empty($search)) {
             $query .= " AND (u.name LIKE :search OR p.title LIKE :search OR p.text LIKE :search)";
-            $params['search'] = "%$search%";
+            $params[':search'] = "%$search%";
         }
 
         // Tags
         if (!empty($tags)) {
             $tags = array_map('intval', $tags);
-            $placeholders = implode(',', array_fill(0, count($tags), '?'));
-            $query .= " AND pt.id_tag IN ($placeholders)";
-            $params = array_merge($params, $tags);
+            $placeholders = [];
+            foreach ($tags as $index => $tag) {
+                $placeholder = ":tag{$index}";
+                $placeholders[] = $placeholder;
+                $params[$placeholder] = $tag;
+            }
+            $query .= " AND pt.id_tag IN (" . implode(',', $placeholders) . ")";
         }
 
         // Techs
         if (!empty($techs)) {
             $techs = array_map('intval', $techs);
-            $placeholders = implode(',', array_fill(0, count($techs), '?'));
-            $query .= " AND ptech.id_tech IN ($placeholders)";
-            $params = array_merge($params, $techs);
+            $placeholders = [];
+            foreach ($techs as $index => $tech) {
+                $placeholder = ":tech{$index}";
+                $placeholders[] = $placeholder;
+                $params[$placeholder] = $tech;
+            }
+            $query .= " AND ptech.id_tech IN (" . implode(',', $placeholders) . ")";
         }
 
         // Sorting
