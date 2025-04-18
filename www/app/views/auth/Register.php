@@ -10,7 +10,7 @@
 
         <form action="/register" method="POST" class="auth-form">
             <input type="text" name="name" placeholder="Name" required class="form-input">
-            <input type="email" name="email" placeholder="Email (@edu.esiee-it.fr)" required class="form-input">
+            <input type="email" name="email" placeholder="Email (esiee-it.fr)" required class="form-input">
             <input type="password" name="password" id="password" placeholder="Password" required class="form-input">
             <div class="password-strength">
                 <div id="strength-bar" class="strength-bar"></div>

@@ -75,8 +75,8 @@ class AuthController
         }
 
         // Validate email domain
-        if (!preg_match('/@edu\.esiee-it\.fr$/', $email)) {
-            $_SESSION['error'] = "L'email doit être du domaine @edu.esiee-it.fr.";
+        if (!preg_match('/@esiee-it\.fr$/i', $email) && !preg_match('/@edu\.esiee-it\.fr$/', $email)) {
+            $_SESSION['error'] = "L'email doit être du domaine esiee-it.fr.";
             header('Location: /register');
             exit;
         }
